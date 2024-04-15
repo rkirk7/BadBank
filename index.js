@@ -4,7 +4,7 @@ function Spa() {
         <HashRouter>
             <AllActivity.Provider value={[]}>
                 <CurrentUser.Provider value={{key:null, loggedin: false, email: '', name: '', balance:0}}>
-        <UserContext.Provider value={[{key:1, name:"regan", email:"regan", password:"test", balance:200}]}>
+        <UserContext.Provider value={[{key:1, name:"Regan Kirk", email:"regan@email.com", password:"fakepassword", balance:200}]}>
    <Route render={({ location }) => (
     <>
                 <NavBar location={location}/>
