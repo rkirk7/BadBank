@@ -50,9 +50,9 @@ function AllData(){
         
 
         <Table
-        header="Bank Transaction History"
+        header="Bank Activity History"
         id="transactiontable"
-        col1="Transaction #"
+        col1=""
         col2="User ID"
         col3="Activity"
         col4="Account Balance"
