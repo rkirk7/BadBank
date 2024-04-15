@@ -1,10 +1,14 @@
 function Login(){
     const currentUser = React.useContext(CurrentUser);
     const ctx = React.useContext(UserContext);
+    const allActivity = React.useContext(AllActivity);
     const [status, setStatus] = React.useState('');
     const [loggedIn, setLoggedIn] = React.useState(currentUser);
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [formFilled, setFormFilled] = React.useState(true);
+
+
 
     function validate(field, label){
         if (!field) {
@@ -19,15 +23,18 @@ function Login(){
         if(!validate(email, 'Invalid Email')) return;
         if(!validate(password, 'Invalid Password')) return;
         let success = false;
-        ctx.users.forEach(user => {
+        ctx.forEach(user => {
            if (user.email == email && user.password == password) {
             setLoggedIn({loggedin:true, user:email});
             success = true;
+            currentUser.key = user.key
             currentUser.loggedin = true;
-            currentUser.user = email;
+            currentUser.email = email;
             currentUser.name = user.name;
             currentUser.balance = user.balance;
-            console.log(currentUser);
+            let date = new Date();
+        allActivity.push({key:allActivity.length, userID:user.key, name:user.name, activity: `${user.name} logged in`, balance:user.balance, time:date})
+
            }  
         });
         if (!success) {
@@ -36,13 +43,20 @@ function Login(){
     }
 
     function logOut(){
+        let date = new Date();
+        allActivity.push({key:allActivity.length, userID:currentUser.key, name:currentUser.name, activity: `${currentUser.name} logged out`, balance:currentUser.balance, time:date})
+
             currentUser.loggedin = false;
-            currentUser.user = '';
+            currentUser.email = '';
             currentUser.name = '';
             currentUser.balance = 0;
-            setLoggedIn({loggedin: false, user:'', name:'', balance:0}); 
+            setLoggedIn({key:null, loggedin: false, email:'', name:'', balance:0}); 
+            
     }
 
+    React.useEffect(() =>{
+        setFormFilled(email != '' && password != ''); 
+    }, [email, password])
 
     return (
         <Card 
@@ -55,7 +69,7 @@ function Login(){
             <input type="input" className="form-control" id="email" placeholder="Enter Email Address" value={email} onChange={e => setEmail(e.currentTarget.value)} /> <br />
             Password<br/>
             <input type="password" className="form-control" id="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.currentTarget.value)} /> <br />
-            <button type="submit" className="btn btn-light" onClick={logIn}>Log In</button> <br />
+            <button type="submit" className="btn btn-light" onClick={logIn} disabled={!formFilled}>Log In</button> <br />
         </>
         ) : (
             <>
