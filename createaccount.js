@@ -27,6 +27,8 @@ function CreateAccount(){
         if(!validate(email, 'email')) {
             alert('email is a required field.')
             return;
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+                errors.emailField = "Your email address is not formatted correctly.";
         }
         if(!validate(password, 'password')) {
             alert('Password is a required field.')
@@ -74,8 +76,8 @@ function CreateAccount(){
             <input type="input" className="form-control" id="name" placeholder="Enter Name" value={name} onChange={e => setName(e.currentTarget.value)} /> <br />
             Email Address<br/>
             <input type="input" className="form-control" id="email" placeholder="Enter Email Address" value={email} onChange={e => setEmail(e.currentTarget.value)} /> <br />
-            Password<br/>
-            <input type="password" className="form-control" id="password" placeholder="Enter Password (at least 8 characters)" value={password} onChange={e => setPassword(e.currentTarget.value)} /> <br />
+            Password (at least 8 characters)<br/>
+            <input type="password" className="form-control" id="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.currentTarget.value)} /> <br />
             <button id="submit" type="submit" className="btn btn-light" onClick={handleCreate} disabled={!formFilled}>Create Account</button> <br />
         </>
         ) : (
