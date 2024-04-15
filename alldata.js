@@ -52,7 +52,7 @@ function AllData(){
         <Table
         header="Bank Activity History"
         id="transactiontable"
-        col1=""
+        col1="Activity ID"
         col2="User ID"
         col3="Activity"
         col4="Account Balance"

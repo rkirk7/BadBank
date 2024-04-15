@@ -28,7 +28,8 @@ function CreateAccount(){
             alert('email is a required field.')
             return;
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-                alert("Your email address is not formatted correctly.");
+                alert("Your email address is not formatted correctly.")
+                return;
         }
         if(!validate(password, 'password')) {
             alert('Password is a required field.')
