@@ -13,7 +13,7 @@ export function Card(props) {
 }
 
     return (
-        <div className={classes()}>
+        <div id="card" className={classes()}>
             <div className="card-header">{props.header}</div>
             <div className="card-body text-start">
                 {props.title && (<h5 className="card-title">{props.title}</h5>)}
