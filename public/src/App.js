@@ -9,6 +9,7 @@ import Spa from './Components/index';
 import Login from './Components/login';
 import NavBar from './Components/navbar';
 import Withdraw from './Components/withdraw';
+import React from 'react';
 
 function App() {
   return (
