@@ -22,7 +22,6 @@ app.get('/account/create/:name/:email/:password', async (req, res) => {
 app.get('/account/all', async (req, res) => {
     try {
     const docs = await dal.all();
-    console.log(docs);
         res.send(docs);
     } catch (err) {
         console.error('error retrieving all accounts', err);

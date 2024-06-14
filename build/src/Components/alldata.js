@@ -1,69 +1,43 @@
 import React from "react";
-import {UserContext, AllActivity, Table} from "./context";
+import {Table} from "./context";
 
 export default function AllData(){
-    const ctx = React.useContext(UserContext);
-    const allActivity = React.useContext(AllActivity);
+  const [data, setData] = React.useState([]);
+  React.useEffect(() => {
+    //fetch all accounts from API
+    fetch('/account/all')
+    .then(response => response.json())
+    .then(data => {
+      setData(data);
+    });
+  }, []);
 
-    const userList = ctx.map(user => {
-        return (
-          <tr key={user.key}>
-            <td>{user.name}</td>
-            <td>${user.balance}</td>
-            <td>{user.email}</td>
-            <td>{user.password}</td>
-            <td>{user.key}</td>
-          </tr>
-        );
-      });
+  const userList = Array.isArray(data) && data.map(user => (
+    <tr key={user._id}>
+      <td>{user.name}</td>
+      <td>${user.balance}</td>
+      <td>{user.email}</td>
+      <td>{user.password}</td>
+      <td>{user._id}</td>
+    </tr>
+  ));
 
-      let transactionList = [];
+return (
+  <div>
+      
+  <Table
+  header="User Information"
+  id="usertable"
+  col1="Name"
+  col2="Balance"
+  col3="Email"
+  col4="Password"
+  col5="ID"
+  list={userList}
 
-      if (allActivity.length > 0) {
-        transactionList = allActivity.map(transaction => {
-        const formattedDate = transaction.time.toLocaleString('en-US', { timeZoneName: 'short' });
-        return (
-          <tr key={transaction.key}>
-            <td>{transaction.key}</td>
-            <td>{transaction.userID}</td>
-            <td>{transaction.activity}</td>
-            <td>${transaction.balance}</td>
-            <td>{formattedDate}</td>
-          </tr>
-        );
-      });
-    }
+  />
+  
+  </div>
 
-
-    return (
-        <div>
-            
-        <Table
-        header="User Information"
-        id="usertable"
-        col1="Name"
-        col2="Balance"
-        col3="Email"
-        col4="Password"
-        col5="ID"
-        list={userList}
-
-        />
-        <br />
-        
-
-        <Table
-        header="Bank Activity History"
-        id="transactiontable"
-        col1="Activity ID"
-        col2="User ID"
-        col3="Activity"
-        col4="Account Balance"
-        col5="Date"
-        list={transactionList}
-        />
-        
-        </div>
-
-    );
+);
 }

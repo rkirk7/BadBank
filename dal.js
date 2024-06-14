@@ -37,7 +37,6 @@ MongoClient.connect(url)
     }
     try {
         const docs = await db.collection('users').find().toArray();
-        console.log('mongo success');
         return docs
     } catch (err) {
         console.error('error retrieving docs', err);

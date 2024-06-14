@@ -9,9 +9,7 @@ export default function CreateAccount(){
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [formFilled, setFormFilled] = React.useState(true);
-    const ctx = React.useContext(UserContext);
     const currentUser = React.useContext(CurrentUser);
-    const allActivity = React.useContext(AllActivity);
 
     function validate(field, label){
         if (!field) {
@@ -22,7 +20,8 @@ export default function CreateAccount(){
         return true;
     }
 
-    function handleCreate(){
+    function handleCreate() {
+        console.log('create clicked');
         if(!validate(name, 'name')) {
             alert('Name is a required field.')
             return;
@@ -42,18 +41,18 @@ export default function CreateAccount(){
             alert('Your password must be at least eight characters.')
             return;
         }
-
-        currentUser.loggedin = true;
-        currentUser.email = email;
-        currentUser.name = name;
-        currentUser.balance = 0;
-        const newUser = {key:ctx.length + 1, name:name, email:email, password:password, balance:0};
-        currentUser.key = newUser.key;
-        ctx.push(newUser);
-        let date = new Date();
-        allActivity.push({key:allActivity.length, userID:newUser.key, name:newUser.name, activity: `${newUser.name} created an account`, balance:0, time:date})
-
-        setShow(false);
+            const url = `/account/create/${name}/${email}/${password}`;
+            console.log('trying to create with url', url);
+            (async () => {
+               var res = await fetch(url);
+               var data = await res.json();
+               console.log(data)
+               currentUser.loggedin = true;
+               currentUser.email = email;
+               currentUser.name = name;
+               currentUser.balance = 0;
+       setShow(false);
+            })();
     }
 
     function clearForm(){
