@@ -4,7 +4,6 @@ import {UserContext, AllActivity, Table} from "./context";
 export default function AllData(){
     const ctx = React.useContext(UserContext);
     const allActivity = React.useContext(AllActivity);
-
     const userList = ctx.map(user => {
         return (
           <tr key={user.key}>
