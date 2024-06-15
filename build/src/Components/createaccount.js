@@ -1,15 +1,18 @@
 import React from "react";
-import { UserContext, CurrentUser, AllActivity, Card} from "./context";
+import { CurrentUser, Card} from "./context";
+import { useNavigate } from "react-router-dom";
+
 
 export default function CreateAccount(){
 
+    const navigate = useNavigate();
     const [show, setShow] = React.useState(true);
     const [status, setStatus] = React.useState('');
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [formFilled, setFormFilled] = React.useState(true);
-    const currentUser = React.useContext(CurrentUser);
+    const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
 
     function validate(field, label){
         if (!field) {
@@ -21,7 +24,6 @@ export default function CreateAccount(){
     }
 
     function handleCreate() {
-        console.log('create clicked');
         if(!validate(name, 'name')) {
             alert('Name is a required field.')
             return;
@@ -42,15 +44,20 @@ export default function CreateAccount(){
             return;
         }
             const url = `/account/create/${name}/${email}/${password}`;
-            console.log('trying to create with url', url);
             (async () => {
                var res = await fetch(url);
                var data = await res.json();
-               console.log(data)
-               currentUser.loggedin = true;
-               currentUser.email = email;
-               currentUser.name = name;
-               currentUser.balance = 0;
+               
+               setCurrentUser(user => ({
+                email: email,
+                name: name,
+                balance: 0
+              }));
+              
+              setTimeout(() => {
+                navigate('/');
+            }, 0);
+
        setShow(false);
             })();
     }

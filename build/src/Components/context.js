@@ -1,9 +1,22 @@
 import React from "react";
-import { createContext } from 'react';
+import {useState} from "react";
 
-export const UserContext = React.createContext(null);
 export const AllActivity = React.createContext(null);
-export const CurrentUser  = React.createContext({key:null, loggedin: false, email: '', name: '', balance:0});
+export const CurrentUser  = React.createContext();
+
+export const CurrentUserProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState({
+      name: '',
+      email: '',
+      balance: 0
+  });
+
+  return (
+      <CurrentUser.Provider value={{ currentUser, setCurrentUser }}>
+          {children}
+      </CurrentUser.Provider>
+  );
+};
 
 export function Card(props) {
     function classes() {

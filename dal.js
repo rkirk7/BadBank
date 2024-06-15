@@ -23,7 +23,6 @@ MongoClient.connect(url)
     const doc = {name, email, password, balance: 0};
     try {
         const result = await collection.insertOne(doc);
-        console.log('result:', result);
         return result;
     } catch (err) {
         console.error('error inserting doc', err);
@@ -44,4 +43,47 @@ MongoClient.connect(url)
     }
 }
 
-  module.exports = {create,all}
+async function balance(email) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        const docs = await db.collection('users').find( {"email" : email}).toArray();
+        console.log(docs);
+        return docs[0];
+    } catch (err) {
+        console.error('error retrieving docs', err);
+    }
+}
+
+async function updateBalance(email, newamount) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        const result = await db.collection('users').updateOne(
+            { email: email },
+            { $set: { balance: newamount } }
+        );
+        return newamount;
+    } catch (err) {
+        console.error('Error updating balance:', err);
+        throw err;
+    }
+}
+
+async function login(email, password) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        const docs = await db.collection('users').find( {"email" : email}).toArray();
+        return docs[0];
+    } catch (err) {
+        console.error('error retrieving docs', err);
+        
+}
+}
+
+
+  module.exports = {create,all, balance, updateBalance, login}

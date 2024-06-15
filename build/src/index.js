@@ -4,11 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "bootstrap/dist/css/bootstrap.css";
+import {AllActivity, CurrentUserProvider } from ".//Components/context";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <AllActivity.Provider value={[]}>
+    <CurrentUserProvider>
     <App />
+    </CurrentUserProvider>
+     </AllActivity.Provider>
   </React.StrictMode>
 );
 

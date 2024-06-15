@@ -80,4 +80,10 @@ align-items: center;
   color:white;
 }
 
+.mylink {
+  color: white; 
+}
 
+.mylink:hover {
+  color: rgb(147, 214, 218); 
+}

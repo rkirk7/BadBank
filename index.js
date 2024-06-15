@@ -12,7 +12,6 @@ app.get('/account/create/:name/:email/:password', async (req, res) => {
     try {
         const user = await dal.create(req.params.name, req.params.email, req.params.password);
         res.status(201).send(user);
-        console.log('express success', user);
     } catch (err) {
         console.error('error creating account', err);
         res.status(500).send({error: 'failed to create account'});
@@ -29,27 +28,34 @@ app.get('/account/all', async (req, res) => {
     }
 });
 
+app.get('/account/balance/:email', async function(req,res) {
+    try {
+        const doc = await dal.balance(req.params.email);
+        res.send(doc);
+    } catch (err) {
+    console.error('error retrieving balance', err);
+    res.status(500).send({error: 'failed to retrieve balance'});
+    }
+});
+
+app.get('/account/updateBalance/:email/:amount', async function(req,res) {
+    try {
+        const newBalance = await dal.updateBalance(req.params.email, Number(req.params.amount));
+        res.send({ email: req.params.email, newBalance });
+    } catch (err) {
+        console.error('Error updating balance', err);
+        res.status(500).send({ error: 'Failed to update balance' });
+    }
+});
+
 //login user
-app.get('/account/login/:email/:password', function(req,res) {
-    res.send({
-        email:      req.params.email,
-        password:   req.params.password
-    });
-});
-
-
-app.get('/account/deposit/:email/:amount', function(req,res) {
-    res.send({
-        email:      req.params.email,
-        password:   req.params.amount
-    });
-});
-
-app.get('/account/withdraw/:email/:amount', function(req,res) {
-    res.send({
-        email:      req.params.email,
-        password:   req.params.amount
-    });
+app.get('/account/login/:email/:password', async function(req,res) {
+    try {
+        const doc = await dal.login(req.params.email, req.params.password);
+        res.send(doc);
+    } catch (err) {
+        res.status(404).send({ error: 'Failed to find account' });
+    }
 });
 
 var port = 3000;
