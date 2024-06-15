@@ -2,13 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CurrentUser, AllActivity } from "./context";
 
-
 export default function Login(){
     const { currentUser, setCurrentUser} = React.useContext(CurrentUser);
-   //const currentUser = React.useContext(CurrentUser);
     const navigate = useNavigate();
-
-  //  const allActivity = React.useContext(AllActivity);
     const [status, setStatus] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -24,34 +20,36 @@ export default function Login(){
         return true;
     }
     
-    const url = `/account/login/${email}/${password}`;
+    const url = `/account/loginfirebase/${email}/${password}`;
+    const logOutUrl = `/account/logout/`;
     
     async function logIn(){
         if(!validate(email, 'Invalid Email')) return;
         if(!validate(password, 'Invalid Password')) return;
         let success = false;
+
         var res = await fetch(url);
 
         const contentType = res.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
-            alert('Error: No account found for that email. Please try again, or create a new account.');
-            return;  
-        }
+             alert('Error: No account found for that email. Please try again, or create a new account.');
+             return;  
+         }
 
-        var data = await res.json();
+         var data = await res.json();
 
-        if (password === data.password) {
-            success = true;
-            setCurrentUser(user => ({
-                email: email,
-                name: data.name,
-                balance: data.balance
-              }));  
+         if (password === data.password) {
+             success = true;
+             setCurrentUser(user => ({
+                 email: email,
+                 name: data.name,
+                 balance: data.balance
+               }));  
  
-              setTimeout(() => {
-                navigate('/');
-            }, 0);
-        }
+               setTimeout(() => {
+                 navigate('/');
+             }, 0);
+         }
 
      //       let date = new Date();
      //   allActivity.push({key:allActivity.length, userID:user.key, name:user.name, activity: `${user.name} logged in`, balance:user.balance, time:date})
@@ -61,7 +59,9 @@ export default function Login(){
         }
     }
 
-    function logOut(){
+    async function logOut(){
+        var res = await fetch(logOutUrl);
+        if (res) {
         setCurrentUser(user => ({
             email: '',
             name: '',
@@ -70,6 +70,9 @@ export default function Login(){
           setTimeout(() => {
             navigate('/login');
         }, 0);
+    } else {
+        alert('There was a problem logging out. Please try again.')
+    }
     }
 
     React.useEffect(() =>{

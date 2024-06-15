@@ -1,6 +1,20 @@
 const MongoClient = require('mongodb').MongoClient;
 const url          = 'mongodb://localhost:27017';
 let db              = null;
+const { initializeApp } = require("firebase/app");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
+    authDomain: "bank-f0c47.firebaseapp.com",
+    projectId: "bank-f0c47",
+    storageBucket: "bank-f0c47.appspot.com",
+    messagingSenderId: "710670974978",
+    appId: "1:710670974978:web:b724e76530555264b8271b"
+  };
+  
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth();
 
 //connect to Mongo
 MongoClient.connect(url)
@@ -15,12 +29,23 @@ MongoClient.connect(url)
 
   //create user account
 
-  async function create(name, email, password) {
+  async function createFirebase(name, email, password) {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        create(name, email, password);
+      } catch (error) {
+        console.error('Error creating user with Firebase:', error.code, error.message);
+        throw error;
+      }
+  }
+
+  async function create(name, email) {
     if (!db) {
         throw new Error('database connection not successful');
     }
     const collection = db.collection('users');
-    const doc = {name, email, password, balance: 0};
+    const doc = {name, email, balance: 0};
     try {
         const result = await collection.insertOne(doc);
         return result;
@@ -72,7 +97,7 @@ async function updateBalance(email, newamount) {
     }
 }
 
-async function login(email, password) {
+async function login(email) {
     if (!db) {
         throw new Error('database connection not successful');
     }
@@ -80,10 +105,29 @@ async function login(email, password) {
         const docs = await db.collection('users').find( {"email" : email}).toArray();
         return docs[0];
     } catch (err) {
-        console.error('error retrieving docs', err);
-        
-}
+        console.error('error retrieving docs', err);       
+    }
 }
 
+async function loginFirebase(email, password) {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('logged in on firebase');
+        return await login(email);
+    } catch (error) {
+        console.error('Error logging in with Firebase:', error.code, error.message);
+        throw error; 
+    }
+}
 
-  module.exports = {create,all, balance, updateBalance, login}
+async function logout() {
+    try {
+        await auth.signOut();
+        return { message: 'Logout successful' };
+    } catch (error) {
+        console.error('Error during logout:', error);
+        throw error;
+    }
+}
+
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout}

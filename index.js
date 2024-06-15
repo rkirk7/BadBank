@@ -18,6 +18,16 @@ app.get('/account/create/:name/:email/:password', async (req, res) => {
     }
 });
 
+app.get('/account/createfirebase/:name/:email/:password', async (req, res) => {
+    try {
+        const user = await dal.createFirebase(req.params.name, req.params.email, req.params.password);
+        res.status(201).send(user);
+    } catch (err) {
+        console.error('error creating account', err);
+        res.status(500).send({error: 'failed to create account'});
+    }
+});
+
 app.get('/account/all', async (req, res) => {
     try {
     const docs = await dal.all();
@@ -49,9 +59,28 @@ app.get('/account/updateBalance/:email/:amount', async function(req,res) {
 });
 
 //login user
-app.get('/account/login/:email/:password', async function(req,res) {
+app.get('/account/login/:email/', async function(req,res) {
     try {
-        const doc = await dal.login(req.params.email, req.params.password);
+        const doc = await dal.login(req.params.email);
+        res.send(doc);
+    } catch (err) {
+        res.status(404).send({ error: 'Failed to find account' });
+    }
+});
+
+app.get('/account/logout/', async function(req,res) {
+    try {
+        const resp = await dal.logout();
+        res.send(resp);
+    } catch (err) {
+        res.status(404).send({ error: 'Failed to find account' });
+    }
+});
+
+
+app.get('/account/loginfirebase/:email/:password', async function(req,res) {
+    try {
+        const doc = await dal.loginFirebase(req.params.email, req.params.password);
         res.send(doc);
     } catch (err) {
         res.status(404).send({ error: 'Failed to find account' });
