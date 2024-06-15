@@ -12,8 +12,8 @@ First, run git clone to create a copy of this repo for yourself. Update the Fire
 
 <h2>Screenshots</h2>
 
-<img src="./Images/badbank1.jpg">
-<img src="./Images/badbank2.jpg">
+<img src="./public/src/Images/badbank1.jpg">
+<img src="./public/src/Images/badbank2.jpg">
 
 <h2>Future Features</h2>
 
