@@ -116,7 +116,7 @@ async function loginFirebase(email, password) {
         return await login(email);
     } catch (error) {
         console.error('Error logging in with Firebase:', error.code, error.message);
-        throw error; 
+        return(error);
     }
 }
 
