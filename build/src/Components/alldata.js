@@ -1,8 +1,13 @@
 import React from "react";
-import {Table} from "./context";
+import {Table, CurrentUser} from "./context";
+
 
 export default function AllData(){
+
+  const { currentUser } = React.useContext(CurrentUser);
   const [data, setData] = React.useState([]);
+
+  if (currentUser.role === 'admin') {
   React.useEffect(() => {
     //fetch all accounts from API
     fetch('/account/all')
@@ -17,7 +22,6 @@ export default function AllData(){
       <td>{user.name}</td>
       <td>${user.balance}</td>
       <td>{user.email}</td>
-      <td>{user.password}</td>
       <td>{user._id}</td>
     </tr>
   ));
@@ -31,13 +35,16 @@ return (
   col1="Name"
   col2="Balance"
   col3="Email"
-  col4="Password"
-  col5="ID"
+//  col4="Password"
+  col4="ID"
   list={userList}
 
   />
   
   </div>
 
-);
+); }
+else {
+  alert('You do not have permission to view this page. If you believe this warning is in error, please contact the bank administrator.')
+}
 }

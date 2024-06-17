@@ -10,7 +10,7 @@ app.use(cors());
 //create an account
 app.get('/account/create/:name/:email/:password', async (req, res) => {
     try {
-        const user = await dal.create(req.params.name, req.params.email, req.params.password);
+        const user = await dal.create(req.params.name, req.params.email, req.params.password, req.params.role);
         res.status(201).send(user);
     } catch (err) {
         console.error('error creating account', err);
@@ -18,9 +18,9 @@ app.get('/account/create/:name/:email/:password', async (req, res) => {
     }
 });
 
-app.get('/account/createfirebase/:name/:email/:password', async (req, res) => {
+app.get('/account/createfirebase/:name/:email/:password/:role', async (req, res) => {
     try {
-        const user = await dal.createFirebase(req.params.name, req.params.email, req.params.password);
+        const user = await dal.createFirebase(req.params.name, req.params.email, req.params.password, req.params.role);
         res.status(201).send(user);
     } catch (err) {
         console.error('error creating account', err);

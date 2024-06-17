@@ -29,15 +29,14 @@ export default function Home(){
        <Card 
        bgcolor="primary"
        txtcolor="white"
-       header="Welcome to Regan's Totally Legitimate Bank of Fake Money"
+       header="Regan's Bad Bank"
        title={currentUser.name != '' ? `Welcome, ${currentUser.name}.` : ''}       
-       text="We are thrilled to be located in the Cayman Islands, where taxes are a thing of the past!"
        body={currentUser.name != '' ? `Your current balance is $${currentUser.balance}. You can make a deposit or withdraw fake cash!` : 
        <>
        Please <Link to="/login" className="mylink">log in</Link> or <Link to="/CreateAccount" className="mylink">create an account</Link> to continue.
      </>
       }       
-       centered={(<img src={require ('../Images/bank.png')} className="img-fluid" alt="Bank Icon" />)}
+       centered={(<img src={require ('../Images/badbanklogo.png')} className="img-fluid" alt="Bank Icon" />)}
        
        />
     );

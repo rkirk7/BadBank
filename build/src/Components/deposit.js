@@ -8,7 +8,7 @@ export default function Deposit(){
 
     const [deposit, setDeposit] = React.useState(0);
     const [lastDeposit, setLastDeposit] = React.useState(0);
-    const [balance, setBalance] = React.useState(4);
+    const [balance, setBalance] = React.useState(currentUser.balance);
     const [formFilled, setFormFilled] = React.useState(true);
     const [depositComplete, setDepositComplete] = React.useState(false);
 
@@ -62,21 +62,22 @@ export default function Deposit(){
         bgcolor="primary"
         txtcolor="white"
         header="Make a Deposit"
-        text={currentUser.name != '' ? `${currentUser.name}, your balance is $${balance}.` : "Please log in or create an account to make a deposit."}       
+        text={`${currentUser.name}, your balance is $${balance}.`}       
         title={depositComplete && `You have successfully deposited $${lastDeposit}!`}       
-        centered={currentUser.name != '' ? (
+        body={
             <>
             Deposit Amount<br/>
             <input type="input" className="form-control" id="deposit" placeholder="Enter Deposit Amount" value={deposit} onChange={e => {
                 setDeposit(e.currentTarget.value);
                 setDepositComplete(false);
-                }} /> <br />
-            <button type="submit" className="btn btn-light" onClick={makeDeposit} disabled={!formFilled}>Make Deposit</button> <br />
+                }} /> <br /> 
         </>
-        ) : (
-            <>
-            </>
-        )}
+        }
+        centered={
+    <>
+            <button type="submit" className="btn btn-light" onClick={makeDeposit} disabled={!formFilled}>Make Deposit</button> <br />
+    </>
+        }
         />
      );
  }

@@ -29,23 +29,23 @@ MongoClient.connect(url)
 
   //create user account
 
-  async function createFirebase(name, email, password) {
+  async function createFirebase(name, email, password, role) {
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password, role);
         const user = userCredential.user;
-        create(name, email, password);
+        create(name, email, role);
       } catch (error) {
         console.error('Error creating user with Firebase:', error.code, error.message);
         throw error;
       }
   }
 
-  async function create(name, email) {
+  async function create(name, email, role) {
     if (!db) {
         throw new Error('database connection not successful');
     }
     const collection = db.collection('users');
-    const doc = {name, email, balance: 0};
+    const doc = {name, email, balance: 0, role};
     try {
         const result = await collection.insertOne(doc);
         return result;

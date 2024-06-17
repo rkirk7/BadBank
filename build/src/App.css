@@ -42,6 +42,7 @@
   align-items: center;
   margin: 0 auto;
   width: 80%;
+  height: 80%;
   margin-top: 20px;
 }
 
@@ -63,10 +64,14 @@ align-items: center;
 }
 
 .img-fluid{
-      max-width: 100px;
-      max-height: 100px;
+      max-width: 200px;
+      max-height: 200px;
 }
 
+.img-navbar{
+  max-width: 100px;
+  max-height: 100px;
+}
 
 .navbar-brand{
   color:white;

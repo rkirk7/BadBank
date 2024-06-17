@@ -2,19 +2,22 @@
  
 <h2>Description</h2>
 
-This app simulates the functions of a bank, tracking users and their balances.
+I built this app as my capstone project for my MIT-Emeritus coding program. Its purpose was to be a full stack application where I was responsible for both the front and back end.
 
-<h2>How to Run</h2>
+This app simulates the functions of a bank, tracking users and their balances. Users can create accounts, log in and out, deposit and withdraw money, and (if properly credentialed) view all of the bank's data.
 
-This project must be loaded using a server (run "http-server -c-1" from the terminal in order to open a server that will not cache items).
+<h2>Installation Guidelines</h2>
 
-<h2>Roadmap of Future Improvements</h2>
+First, run git clone to create a copy of this repo for yourself. Update the Firebase configuration credentials using your own Firebase account. Use the command node index.js to run this on a local server.
 
-I intend to continue developing the functionality and UI.
+<h2>Screenshots</h2>
 
-<h2>Support</h2>
+<img src="./Images/badbank1.jpg">
+<img src="./Images/badbank2.jpg">
 
-For help with this repo, please contact regan.kirk@gmail.com.
+<h2>Future Features</h2>
+
+I intend to continue developing the functionality and UI. I plan to add authorization levels. I also want to significantly improve how this looks, including adding a fake logo.
 
 <h2>License</h2>
 

@@ -38,14 +38,16 @@ export default function Login(){
 
          var data = await res.json();
 
-         if (password === data.password) {
+         if (email === data.email) {
              success = true;
              setCurrentUser(user => ({
                  email: email,
                  name: data.name,
-                 balance: data.balance
+                 balance: data.balance,
+                 role: data.role
                }));  
  
+               alert('Success! You are now logged in.');
                setTimeout(() => {
                  navigate('/');
              }, 0);
@@ -95,7 +97,7 @@ export default function Login(){
         ) : (
             <>
             <h5>Success!</h5>
-            <p>You are logged in as {currentUser.name}.</p>
+            <p>You are logged in as {currentUser.name}. You have access to the site as a(n) {currentUser.role}.</p>
             <button type="submit" className="btn btn-light" onClick={logOut}>Log Out</button> <br />
 
             </>

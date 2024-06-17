@@ -69,22 +69,23 @@ export default function Withdraw(){
         bgcolor="primary"
         txtcolor="white"
         header="Make a Withdrawal"
-        text={currentUser.name != '' ? `${currentUser.name}, your balance is $${balance}.` : "Please log in to make a withdrawal."}       
+        text={`${currentUser.name}, your balance is $${balance}.`}       
         title={withdrawalComplete && `You have successfully withdrawn $${lastWithdrawal}!`}       
-        body={currentUser.name != '' ? (
+        body= {
             <>
             Withdrawal Amount<br/>
             <input type="input" className="form-control" id="withdrawal" placeholder="Enter Withdrawal Amount" value={withdrawal} onChange={e => {
                 setWithdrawal(e.currentTarget.value);
                 setWtihdrawalComplete(false);
-                }} /> <br />
-            <button type="submit" className="btn btn-light" onClick={makeWithdrawal} disabled={!formFilled}>Make Withdrawal</button> <br />
-        </>
-        ) : (
-            <>
-
+                }} /> <br /> 
             </>
-        )}
+        }
+        
+        centered={
+        <>          
+  <button type="submit" className="btn btn-light" onClick={makeWithdrawal} disabled={!formFilled}>Make Withdrawal</button> <br />
+        </>
+        }
         />
      );
  }

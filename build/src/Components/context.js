@@ -8,7 +8,8 @@ export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({
       name: '',
       email: '',
-      balance: 0
+      balance: 0,
+      role: 'none'
   });
 
   return (
