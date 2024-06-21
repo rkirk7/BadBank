@@ -20,6 +20,7 @@ export default function Deposit(){
       async function getBalance() {
         var res = await fetch(url);
         var data = await res.json();
+        console.log('get balance:', data);
         setBalance(data.balance);
      }
 
@@ -34,7 +35,7 @@ export default function Deposit(){
         }
         let newBalance = Number(deposit) + Number(balance)
 
-        const url = `/account/updateBalance/${currentUser.email}/${newBalance}`;
+        const url = `/account/updateBalance/${currentUser.email}/${newBalance}/deposit/${Number(deposit)}`;
     (async () => {
        var res = await fetch(url);
        setBalance(newBalance);

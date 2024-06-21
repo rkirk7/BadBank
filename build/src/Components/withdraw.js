@@ -3,8 +3,6 @@ import { Card, CurrentUser, AllActivity } from "./context";
 
 export default function Withdraw(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-    const allActivity = React.useContext(AllActivity);
-
     const [withdrawal, setWithdrawal] = React.useState(0);
     const [lastWithdrawal, setLastWithdrawal] = React.useState(0);
     const [balance, setBalance] = React.useState(currentUser.balance);
@@ -19,6 +17,7 @@ export default function Withdraw(){
       async function getBalance() {
         var res = await fetch(url);
         var data = await res.json();
+        console.log('get balance:', data);
         setBalance(data.balance);
      }
 
@@ -41,9 +40,9 @@ export default function Withdraw(){
         else {
         let newBalance = Number(balance) - Number(withdrawal)
         setBalance(newBalance);
-        const url = `/account/updateBalance/${currentUser.email}/${newBalance}`;
+        const updateUrl = `/account/updateBalance/${currentUser.email}/${newBalance}/withdrawal/${withdrawal}`;
         (async () => {
-       var res = await fetch(url);
+       var res = await fetch(updateUrl);
        setBalance(newBalance);
        setCurrentUser(user => ({
         ...user,
@@ -53,10 +52,6 @@ export default function Withdraw(){
         setWithdrawal(0);
         setWtihdrawalComplete(true);
         })();
-
-
-   //     let date = new Date();
-  //      allActivity.push({key:allActivity.length, userID:currentUser.key, name:currentUser.name, activity: `${currentUser.name} withdrew $${withdrawal}`, balance:newBalance, time:date})
         } 
     }
 

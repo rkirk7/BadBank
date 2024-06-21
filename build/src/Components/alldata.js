@@ -6,6 +6,8 @@ export default function AllData(){
 
   const { currentUser } = React.useContext(CurrentUser);
   const [data, setData] = React.useState([]);
+  const [activityData, setActivityData] = React.useState([]);
+  let userList;
 
   if (currentUser.role === 'admin') {
   React.useEffect(() => {
@@ -17,7 +19,7 @@ export default function AllData(){
     });
   }, []);
 
-  const userList = Array.isArray(data) && data.map(user => (
+userList = Array.isArray(data) && data.map(user => (
     <tr key={user._id}>
       <td>{user.name}</td>
       <td>${user.balance}</td>
@@ -25,26 +27,49 @@ export default function AllData(){
       <td>{user._id}</td>
     </tr>
   ));
+}
+
+React.useEffect(() => {
+  fetch(`/account/getActivity/${currentUser.email}/${currentUser.role}`)
+  .then(response => response.json())
+  .then(newData => {
+    setActivityData(newData);
+  });
+}, []);
+
+let activityList = Array.isArray(activityData) && activityData.slice().reverse().map(account => (
+  <tr key={account._id}>
+    <td>{account.email}</td>
+    <td>{account.activity}</td>
+    <td>{new Date(account.date).toLocaleString()}</td>
+  </tr>
+));
 
 return (
   <div>
-      
+    
+      {(currentUser.role === "admin") &&
   <Table
   header="User Information"
   id="usertable"
   col1="Name"
   col2="Balance"
   col3="Email"
-//  col4="Password"
   col4="ID"
   list={userList}
+  />
+      }
 
+<Table
+  header="Bank Activity"
+  id="activitytable"
+  col1="Email"
+  col2="Activity"
+  col3="Date"
+  list={activityList}
   />
   
   </div>
 
-); }
-else {
-  alert('You do not have permission to view this page. If you believe this warning is in error, please contact the bank administrator.')
-}
+);
 }

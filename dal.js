@@ -16,18 +16,13 @@ const firebaseConfig = {
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
 
-//connect to Mongo
 MongoClient.connect(url)
   .then((client) => {
-    console.log('Connected to MongoDB!')
-
      db = client.db('myproject');
   })
   .catch(err => {
     console.error('failed to connect to MongoDB', err);
   });
-
-  //create user account
 
   async function createFirebase(name, email, password, role) {
     try {
@@ -48,7 +43,23 @@ MongoClient.connect(url)
     const doc = {name, email, balance: 0, role};
     try {
         const result = await collection.insertOne(doc);
-        return result;
+        return await log(email, "Created account.", result);
+    } catch (err) {
+        console.error('error inserting doc', err);
+        throw err;
+    }
+  }
+
+  async function log(email, activity, data) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    const collection = db.collection('activity');
+    let date = new Date();
+    const doc = {email: email, activity: activity, date: date};
+    try {
+        const result = await collection.insertOne(doc);
+        return data;
     } catch (err) {
         console.error('error inserting doc', err);
         throw err;
@@ -74,14 +85,14 @@ async function balance(email) {
     }
     try {
         const docs = await db.collection('users').find( {"email" : email}).toArray();
-        console.log(docs);
-        return docs[0];
+        return docs[0]; 
+        //log(email, "Checked balance.", docs[0]);
     } catch (err) {
         console.error('error retrieving docs', err);
     }
 }
 
-async function updateBalance(email, newamount) {
+async function updateBalance(email, newamount, status, amount) {
     if (!db) {
         throw new Error('database connection not successful');
     }
@@ -90,7 +101,13 @@ async function updateBalance(email, newamount) {
             { email: email },
             { $set: { balance: newamount } }
         );
-        return newamount;
+        var string = "";
+        if (status === "deposit") {
+           string = `Deposited $${amount}. New balance: $${newamount}.`
+        } else if (status === "withdrawal") {
+            string = `Withdrew $${amount}. New balance: $${newamount}.`
+        }
+        return await log(email, string, newamount);
     } catch (err) {
         console.error('Error updating balance:', err);
         throw err;
@@ -103,7 +120,8 @@ async function login(email) {
     }
     try {
         const docs = await db.collection('users').find( {"email" : email}).toArray();
-        return docs[0];
+         return docs[0];
+         //await log(email, "Logged in.", docs[0]);
     } catch (err) {
         console.error('error retrieving docs', err);       
     }
@@ -112,7 +130,6 @@ async function login(email) {
 async function loginFirebase(email, password) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('logged in on firebase');
         return await login(email);
     } catch (error) {
         console.error('Error logging in with Firebase:', error.code, error.message);
@@ -123,11 +140,30 @@ async function loginFirebase(email, password) {
 async function logout() {
     try {
         await auth.signOut();
-        return { message: 'Logout successful' };
+        return;
+        //await log(email, "Logged out.", { message: 'Logout successful' });
     } catch (error) {
         console.error('Error during logout:', error);
         throw error;
     }
 }
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout}
+async function getActivity(email, role) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        let docs;
+        if (role === "admin") {
+            docs = await db.collection('activity').find().toArray();
+        } else {
+         docs = await db.collection('activity').find( {"email" : email}).toArray();
+        }
+        return docs;
+    } catch (err) {
+        console.error('error retrieving docs', err);
+        throw err;
+    }
+}
+
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity}

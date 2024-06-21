@@ -53,9 +53,6 @@ export default function Login(){
              }, 0);
          }
 
-     //       let date = new Date();
-     //   allActivity.push({key:allActivity.length, userID:user.key, name:user.name, activity: `${user.name} logged in`, balance:user.balance, time:date})
-
         if (!success) {
             alert('Error: Your email or password were incorrect. Please try again.');
         }

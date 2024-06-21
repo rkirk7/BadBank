@@ -1,11 +1,10 @@
 import React from "react";
 import { Card, CurrentUser, AllActivity } from "./context";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import '../App.css';
 
 
 export default function Home(){
-  const navigate = useNavigate();
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
 
     if (currentUser.email) {
@@ -18,6 +17,7 @@ export default function Home(){
       async function getBalance() {
         var res = await fetch(url);
         var data = await res.json();
+        console.log('get balance:', data);
       setCurrentUser(user => ({
         ...user,
         balance: data.balance
@@ -36,7 +36,7 @@ export default function Home(){
        Please <Link to="/login" className="mylink">log in</Link> or <Link to="/CreateAccount" className="mylink">create an account</Link> to continue.
      </>
       }       
-       centered={(<img src={require ('../Images/badbanklogo.png')} className="img-fluid" alt="Bank Icon" />)}
+       centered={(<img src={require ('../Images/BadBankLogo.png')} className="img-fluid" alt="Bank Icon" />)}
        
        />
     );

@@ -40,31 +40,31 @@ app.get('/account/all', async (req, res) => {
 
 app.get('/account/balance/:email', async function(req,res) {
     try {
-        const doc = await dal.balance(req.params.email);
-        res.send(doc);
+        const balanceDoc = await dal.balance(req.params.email);
+        res.send(balanceDoc);
     } catch (err) {
     console.error('error retrieving balance', err);
     res.status(500).send({error: 'failed to retrieve balance'});
     }
 });
 
-app.get('/account/updateBalance/:email/:amount', async function(req,res) {
+app.get('/account/updateBalance/:email/:newamount/:status/:amount', async function(req,res) {
     try {
-        const newBalance = await dal.updateBalance(req.params.email, Number(req.params.amount));
-        res.send({ email: req.params.email, newBalance });
+        const data = await dal.updateBalance(req.params.email, Number(req.params.newamount), req.params.status, Number(req.params.amount));
+        res.send({ email: req.params.email, data });
     } catch (err) {
         console.error('Error updating balance', err);
         res.status(500).send({ error: 'Failed to update balance' });
     }
 });
 
-//login user
-app.get('/account/login/:email/', async function(req,res) {
+app.get('/account/getActivity/:email/:role', async function(req,res) {
     try {
-        const doc = await dal.login(req.params.email);
-        res.send(doc);
+        const data = await dal.getActivity(req.params.email, req.params.role);
+        res.send(data);
     } catch (err) {
-        res.status(404).send({ error: 'Failed to find account' });
+        console.error('Error updating balance', err);
+        res.status(500).send({ error: 'Failed to update balance' });
     }
 });
 
@@ -80,8 +80,8 @@ app.get('/account/logout/', async function(req,res) {
 
 app.get('/account/loginfirebase/:email/:password', async function(req,res) {
     try {
-        const doc = await dal.loginFirebase(req.params.email, req.params.password);
-        res.send(doc);
+        const data = await dal.loginFirebase(req.params.email, req.params.password);
+        res.send(data);
     } catch (err) {
         res.status(404).send({ error: 'Failed to find account' });
     }
@@ -89,4 +89,4 @@ app.get('/account/loginfirebase/:email/:password', async function(req,res) {
 
 var port = 3000;
 app.listen(port);
-console.log('running on port:' + port);
+console.log("server running");
