@@ -87,6 +87,7 @@ app.get('/account/loginfirebase/:email/:password', async function(req,res) {
     }
 });
 
-var port = 3000;
+const port = process.env.PORT || 4000;
+
 app.listen(port);
-console.log("server running");
+console.log(`server running on port ${port}`);
