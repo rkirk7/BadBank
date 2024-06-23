@@ -185,4 +185,4 @@ async function getActivity(email, role) {
     }
 }
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity}
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, run}
