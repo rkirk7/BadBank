@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-var dal = require('./dal.js');
+var dal = require('./backend/dal.js');
 
 const app = express();
 const port = 5000;
