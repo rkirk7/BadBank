@@ -50,7 +50,7 @@ return (
     
       {(currentUser.role === "admin") &&
   <Table
-  header="User Information"
+  header="Admin View: All Users"
   id="usertable"
   col1="Name"
   col2="Balance"
