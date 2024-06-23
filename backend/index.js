@@ -2,13 +2,16 @@ const express = require('express');
 const cors = require('cors');
 var dal, {run} = require('./dal.js');
 
-run()
-.then(() => {
+
 const app = express();
 const port = 5000;
 
 app.use(express.static('build'));
 app.use(cors());
+
+async function createRoutes() {
+    try {
+        await run();
 
 app.get('/account/createfirebase/:name/:email/:password/:role', async (req, res) => {
     try {
@@ -81,7 +84,10 @@ app.get('/account/loginfirebase/:email/:password', async function(req,res) {
 
 app.listen(port);
 console.log(`server running on port ${port}`);
-})
-.catch((error) => {
-    console.error('Failed to connect to MongoDB:', error);
-});
+}
+catch(error) {
+console.log("failed to connect to MongoDB");
+}
+}
+
+createRoutes();
