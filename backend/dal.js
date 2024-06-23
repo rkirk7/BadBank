@@ -2,28 +2,30 @@ const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
-let db = null;
+const {db} = require("./index");
 
-const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  });
+// const client = new MongoClient(uri, {
+//     serverApi: {
+//       version: ServerApiVersion.v1,
+//       strict: true,
+//       deprecationErrors: true,
+//     }
+//   });
   
-  async function run() {
-    try {
-      await client.connect();
-      await client.db("myproject").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-      db = client.db("myproject");
-      console.log('database:', db);
-    } finally {
-      await client.close();
-    }
-  }
-  run().catch(console.dir);
+//   async function run() {
+//     try {
+//       await client.connect();
+//       await client.db("myproject").command({ ping: 1 });
+//       console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//       db = client.db("myproject");
+//       console.log('database:', db);
+//     } finally {
+//       await client.close();
+//     }
+//   }
+//   run().catch(console.dir);
+
+console.log(`db from dal: ${JSON.stringify(db)}`);
 
 const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
@@ -182,4 +184,4 @@ async function getActivity(email, role) {
     }
 }
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, run}
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity}
