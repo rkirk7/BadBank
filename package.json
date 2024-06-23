@@ -43,6 +43,7 @@
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.4.5",
     "mongodb": "^6.7.0",
+    "mongoose": "^8.4.3",
     "node-libs-browser": "^2.2.1",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "os": "^0.1.2",
