@@ -1,18 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 var dal = require('./dal.js');
-const mongoose = require('mongoose');
 
 const app = express();
 const port = 5000;
 
 app.use(express.static('build'));
 app.use(cors());
-
-mongoose.connect('mongodb://localhost:27017/bank', {
-    useNewUrlParser: true,    
-    useUnifiedTopology: true,
- });
 
 app.get('/account/createfirebase/:name/:email/:password/:role', async (req, res) => {
     try {
