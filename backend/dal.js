@@ -5,7 +5,7 @@ let db              = null;
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
 
-MongoClient.connect(uri, { useNewUrlParser: true })
+MongoClient.connect(uri)
 .then((client) => {
    db = client.db('myproject');
    console.log('connected to MongoDB');
