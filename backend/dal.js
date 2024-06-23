@@ -21,8 +21,8 @@ const client = new MongoClient(uri, {
       await client.db("myproject").command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
       db = client.db("myproject");
+      console.log('database:', db);
     } finally {
-      // Ensures that the client will close when you finish/error
       await client.close();
     }
   }
