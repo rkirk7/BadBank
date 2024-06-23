@@ -98,7 +98,7 @@ const client = new MongoClient(uri, {
       await client.close();
     }
   }
-  run().catch(console.dir);
+  runMongo().catch(console.dir);
 
 app.listen(port);
 console.log(`server running on port ${port}`);
