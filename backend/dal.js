@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const url          = 'mongodb://localhost:27017';
+const url          = 'bad-bank-five.vercel.app/api';
 let db              = null;
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
