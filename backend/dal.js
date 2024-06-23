@@ -10,6 +10,7 @@ MongoClient.connect(uri, {tls: true})
 .then((client) => {
    db = client.db('myproject');
    console.log('connected to MongoDB');
+   console.log('db:', db);
 })
 .catch(err => {
   console.error('failed to connect to MongoDB', err);
