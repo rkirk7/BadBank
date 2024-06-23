@@ -1,11 +1,12 @@
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&appName=bankcluster";
+const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&appName=bankcluster&tls=true&tlsAllowInvalidCertificates=false";
+
 
 let db              = null;
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
 
-MongoClient.connect(uri)
+MongoClient.connect(uri, {tls: true})
 .then((client) => {
    db = client.db('myproject');
    console.log('connected to MongoDB');
