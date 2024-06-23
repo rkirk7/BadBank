@@ -17,10 +17,8 @@ const client = new MongoClient(uri, {
   
   async function run() {
     try {
-      // Connect the client to the server	(optional starting in v4.7)
       await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
+      await client.db("myproject").command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
       db = client.db("myproject");
     } finally {
@@ -43,6 +41,9 @@ const firebaseConfig = {
   const auth = getAuth();
 
   async function createFirebase(name, email, password, role) {
+    if (!db) {
+        throw new Error('Database connection not established');
+    }
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password, role);
         const user = userCredential.user;
