@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&appName=bankcluster&tls=true&tlsAllowInvalidCertificates=false";
+const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
+
 
 
 let db              = null;
