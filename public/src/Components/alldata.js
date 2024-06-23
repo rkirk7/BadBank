@@ -50,7 +50,7 @@ return (
     
       {(currentUser.role === "admin") &&
   <Table
-  header="Admin View: All Users"
+  header="Admin: All Users"
   id="usertable"
   col1="Name"
   col2="Balance"
@@ -61,7 +61,7 @@ return (
       }
 
 <Table
-  header="Bank Activity"
+  header=  {currentUser.role === "admin" ? "Admin: All Bank Activity" : "My Activity"}
   id="activitytable"
   col1="Email"
   col2="Activity"

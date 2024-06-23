@@ -102,7 +102,6 @@ async function balance(email) {
     try {
         const docs = await db.collection('users').find( {"email" : email}).toArray();
         return docs[0]; 
-        //log(email, "Checked balance.", docs[0]);
     } catch (err) {
         console.error('error retrieving docs', err);
     }
@@ -157,7 +156,6 @@ async function logout() {
     try {
         await auth.signOut();
         return;
-        //await log(email, "Logged out.", { message: 'Logout successful' });
     } catch (error) {
         console.error('Error during logout:', error);
         throw error;

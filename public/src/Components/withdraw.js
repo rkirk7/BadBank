@@ -17,7 +17,6 @@ export default function Withdraw(){
       async function getBalance() {
         var res = await fetch(url);
         var data = await res.json();
-        console.log('get balance:', data);
         setBalance(data.balance);
      }
 
