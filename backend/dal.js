@@ -1,5 +1,31 @@
 const MongoClient = require('mongodb').MongoClient;
-const url          = 'bad-bank-five.vercel.app/api';
+const mongoose = require('mongoose');
+
+const dbUri = process.env.MONGO_URI;
+
+if (!dbUri) {
+  console.error('MongoDB connection string is not defined.');
+  process.exit(1);
+}
+
+mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
+.then((client) => {
+    db = client.db('myproject');
+    console.log("connected to MongoDb");
+ })
+ .catch(err => {
+   console.error('failed to connect to MongoDB', err);
+ });
+
+//  MongoClient.connect(url, { useUnifiedTopology: true })
+//  .then((client) => {
+ //    db = client.db('myproject');
+ // })
+ // .catch(err => {
+  //  console.error('failed to connect to MongoDB', err);
+ // });
+
+//const url          = 'bad-bank-five.vercel.app/api';
 let db              = null;
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
@@ -15,14 +41,6 @@ const firebaseConfig = {
   
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
-
-MongoClient.connect(url, { useUnifiedTopology: true })
-  .then((client) => {
-     db = client.db('myproject');
-  })
-  .catch(err => {
-    console.error('failed to connect to MongoDB', err);
-  });
 
   async function createFirebase(name, email, password, role) {
     try {
