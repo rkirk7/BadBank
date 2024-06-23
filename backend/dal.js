@@ -1,16 +1,14 @@
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&appName=bankcluster";
 
-
-//const url          = 'bad-bank-five.vercel.app/api';
 let db              = null;
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
 
-
-MongoClient.connect(uri, { useUnifiedTopology: true })
+MongoClient.connect(uri, { useNewUrlParser: true })
 .then((client) => {
    db = client.db('myproject');
+   console.log('connected to MongoDB');
 })
 .catch(err => {
   console.error('failed to connect to MongoDB', err);
