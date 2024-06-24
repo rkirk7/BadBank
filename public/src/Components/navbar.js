@@ -19,7 +19,7 @@ export default function NavBar({}){
   <a className="navbar-brand" aria-current={selected === "#/" ? "page" : undefined} href="#" data-container="body" data-toggle="popover" data-placement="bottom" title="Home" data-trigger="hover focus">
        <img src={require('../Images/BadBankLogo.png')} className="img-navbar" alt="Bank Logo" />
      </a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarCollapse">
@@ -76,8 +76,8 @@ export default function NavBar({}){
       <li className={selected === "#/login/" ? "nav-item active" : "nav-item"} >
         <a 
         className="nav-link" aria-current={selected === "#/login/" ? "page" : undefined} href="#/login/"
-        data-container="body" 
-        data-toggle="popover" 
+        data-bs-container="body" 
+        data-bs-toggle="popover" 
         data-placement="bottom" 
         title="Click here to access your account"
         data-trigger="hover focus" >
@@ -98,7 +98,7 @@ export default function NavBar({}){
   <a className="navbar-brand" aria-current={selected === "#/" ? "page" : undefined} href="#" data-container="body" data-toggle="popover" data-placement="bottom" title="Home" data-trigger="hover focus">
        <img src={require('../Images/BadBankLogo.png')} className="img-navbar" alt="Bank Logo" />
      </a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
         <div className="collapse navbar-collapse align-items-center justify-content-end" id="navbarCollapse">
