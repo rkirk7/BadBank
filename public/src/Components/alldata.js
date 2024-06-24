@@ -8,6 +8,7 @@ export default function AllData(){
 
   const { currentUser } = React.useContext(CurrentUser);
   const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
   const [activityData, setActivityData] = React.useState([]);
   const [showAllUsers, setShowAllUsers] = React.useState(true);
   const [showActivity, setShowActivity] = React.useState(true);
@@ -42,6 +43,7 @@ export default function AllData(){
     .then(response => response.json())
     .then(data => {
       setData(data);
+      setLoading(false);
     });
   }, [reviewAuthorization]);
 
@@ -65,6 +67,7 @@ React.useEffect(() => {
   .then(response => response.json())
   .then(newData => {
     setActivityData(newData);
+    setLoading(false);
   });
 }, [reviewAuthorization]);
 
@@ -82,6 +85,8 @@ let activityList = activitySearchQuery.slice().reverse().map(account => (
 ));
 
 return (
+  <>
+      {!loading && (
   <div>
       {currentUser.role === "admin" && (
         <div>
@@ -135,6 +140,7 @@ return (
       )}
   </div>
   </div>
-
+      )};
+  </>
 );
 }
