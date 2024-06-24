@@ -23,7 +23,7 @@ export default function NavBar({}){
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarCollapse">
-            <ul className="navbar-nav mr-auto d-flex align-items-center">
+            <ul className="navbar-nav mr-auto">
               <li className={selected === "#/deposit/" ? "nav-item active" : "nav-item"}>
                 <a 
                   className="nav-link" aria-current={selected === "#/deposit/" ? "page" : undefined} href="#/deposit/"
