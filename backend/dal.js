@@ -2,7 +2,6 @@ const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
-const { emit } = require('process');
 let db = null;
 
 const client = new MongoClient(uri, {
@@ -48,7 +47,6 @@ const firebaseConfig = {
             return true;
         } else {
             await createUserWithEmailAndPassword(auth, email, password);
-            console.log('firebase creation successful')
             return await create(name, email, requestedRole);
         }
       } catch (error) {
@@ -78,7 +76,7 @@ const firebaseConfig = {
         throw new Error('database connection not successful');
     }
     const collection = db.collection('users');
-    const doc = {name, email, balance: 0, requestedRole};
+    const doc = {name, email, balance: 0, role: requestedRole};
     try {
         const result = await collection.insertOne(doc);
         return await log(email, `${email } created an account.`, result);

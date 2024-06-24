@@ -4,16 +4,14 @@ const cors = require('cors');
 var dal = require('./dal.js');
 const bodyParser = require('body-parser');
 
-
 const app = express();
 const port = 3000;
 
 app.use(express.static('build'));
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: "10mb" }));
-
+//app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
 
 app.post('/account/createaccount/', async (req, res) => {
     const { name, email, password, requestedRole } = req.body;

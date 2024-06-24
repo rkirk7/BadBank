@@ -1,7 +1,6 @@
 import React from "react";
 import { CurrentUser, Card} from "./context";
 import { useNavigate } from "react-router-dom";
-import { overwriteMiddlewareResult } from "mongoose";
 
 export default function CreateAccount(){
 
@@ -59,7 +58,6 @@ export default function CreateAccount(){
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ name, email, password, requestedRole }),
-                    redirect: "follow",
                 }
                 );
 

@@ -34,7 +34,6 @@ export default function Login(){
              alert('Your password must be at least eight characters.')
              return;
          }
-        let success = false;
 
         try {
             var res = await fetch(url, {
@@ -43,7 +42,6 @@ export default function Login(){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
-                redirect: "follow",
             });
 
          var data = await res.json();
@@ -51,7 +49,6 @@ export default function Login(){
             alert("Something went wrong. Please check your credentials and try again.")
             return;
          }
-             success = true;
 
              setCurrentUser({
                  email: email,
