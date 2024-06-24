@@ -32,21 +32,23 @@ export default function CreateAccount(){
         if(!validate(email, 'email')) {
             alert('email is a required field.')
             return;
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+        } 
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
                 alert("Your email address is not formatted correctly.")
                 return;
+        }
+        let result = /^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/.test(name);
+        if (!result) {
+            alert('Please enter a valid, full name.')
+            return;
         }
         if(!validate(password, 'password')) {
             alert('Password is a required field.')
             return;
         }
         if(password.length<8) {
-            alert('Your password must be at least eight characters.')
+            alert('Your password is incorrect.')
             return;
-        }
-        if (role) {
-            requestedRole = 'requestedAdmin';
-            alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
         }
 
              const url = `/account/createaccount/`;
@@ -68,6 +70,11 @@ export default function CreateAccount(){
                     alert ("An account already exists for this email. Please log in.")
                     return;
                 } else {
+
+             if (role) {
+                        requestedRole = 'requestedAdmin';
+                        alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
+                    }
 
             setCurrentUser({
                 email: email,

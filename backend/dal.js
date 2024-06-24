@@ -1,7 +1,8 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } = require("firebase/auth");
+
 let db = null;
 
 const client = new MongoClient(uri, {
@@ -221,4 +222,21 @@ async function getActivity(email, role) {
     }
 }
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer}
+async function checkAuthorization() {
+    return new Promise((resolve, reject) => {
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                resolve(null);
+            } else {
+                try {
+                    const docs = await db.collection('users').find({ "email": user.email }).toArray();
+                    resolve(docs[0]);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+        }, reject);
+    });
+}
+
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}

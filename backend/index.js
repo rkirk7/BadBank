@@ -4,7 +4,7 @@ const cors = require('cors');
 var dal = require('./dal.js');
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 app.use(express.static('build'));
 app.use(cors());
@@ -43,6 +43,7 @@ app.get('/account/all', async (req, res) => {
     }
 });
 
+
 app.get('/account/balance/:email', async function(req,res) {
     try {
         const balanceDoc = await dal.balance(req.params.email);
@@ -50,6 +51,20 @@ app.get('/account/balance/:email', async function(req,res) {
     } catch (err) {
     console.error('error retrieving balance', err);
     res.status(500).send({error: 'failed to retrieve balance'});
+    }
+});
+
+app.get('/account/authorization/', async function(req,res) {
+    try {
+        const user = await dal.checkAuthorization();
+        if (user === null) {
+            res.send("error");
+        } else {
+        res.send(user);
+        }
+    } catch (err) {
+    console.error('error checking authorization', err);
+    res.status(500).send({error: 'failed to check authorization'});
     }
 });
 

@@ -1,8 +1,10 @@
 import React from "react";
 import {Table, CurrentUser} from "./context";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AllData(){
+  const navigate = useNavigate();
 
   const { currentUser } = React.useContext(CurrentUser);
   const [data, setData] = React.useState([]);
@@ -12,23 +14,40 @@ export default function AllData(){
   const [userSearch, setUserSearch] = React.useState('');
   const [activitySearch, setActivitySearch] = React.useState('');
 
+
+  const authorizationURL = `/account/authorization/`;
+  async function reviewAuthorization() {
+     var res = await fetch(authorizationURL);
+     if (res.ok) {
+     let user = await res.json();
+     if (!user.email) {
+         setTimeout(() => {
+          navigate('/');
+      }, 0);
+    }
+    }; 
+  }
+
+  React.useEffect(() => {
+      reviewAuthorization();
+    }, []);
+
+
   let userList;
 
   if (currentUser.role === 'admin') {
   React.useEffect(() => {
-    //fetch all accounts from API
     fetch('/account/all')
     .then(response => response.json())
     .then(data => {
       setData(data);
     });
-  }, []);
+  }, [reviewAuthorization]);
 
   let userSearchQuery = data.filter((user) => {
     return user.email && user.email.toLowerCase().includes(userSearch.toLowerCase());
   }) || [];
   
-
 
 userList = userSearchQuery.map(user => (
     <tr key={user._id}>
@@ -46,7 +65,7 @@ React.useEffect(() => {
   .then(newData => {
     setActivityData(newData);
   });
-}, []);
+}, [reviewAuthorization]);
 
 let activitySearchQuery = activityData.filter((account) => {
   return account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase());

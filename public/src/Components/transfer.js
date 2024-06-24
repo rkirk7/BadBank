@@ -51,6 +51,15 @@ export default function Transfer(){
             alert('Your balance is too low. Please enter a lower amount.'); 
             return;
         }
+        if (!Number.isInteger(Number(transferAmount))) {
+            alert('Error: You must transfer dollars only, not cents. Please round up or down and try again.'); 
+            return;
+        }
+        if (toEmail === currentUser.email){
+            alert("You cannot transfer money to yourself. Please enter a valid recipient.")
+            return;
+        }
+
         if (toEmail === '') {
             alert('You must enter a valid email address for the recipient. Please try again.'); 
             return;
@@ -66,8 +75,8 @@ export default function Transfer(){
                 alert("Error: Could not find recipient's account. Please check their email and try again.")
                 return;
             }
-            let newFromBalance = Number(fromBalance) - Number(transferAmount);
-            let newToBalance = Number(data2.balance) + Number(transferAmount);
+            let newFromBalance = parseInt(fromBalance) - parseInt(transferAmount);
+            let newToBalance = parseInt(data2.balance) + parseInt(transferAmount);
            setFromBalance(newFromBalance);
            setToBalance(newToBalance);
     

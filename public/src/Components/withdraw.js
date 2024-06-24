@@ -17,7 +17,7 @@ export default function Withdraw(){
       async function getBalance() {
         var res = await fetch(url);
         var data = await res.json();
-        setBalance(data.balance);
+        setBalance(parseInt(data.balance));
      }
 
 
@@ -31,17 +31,21 @@ export default function Withdraw(){
             alert('Please enter your withdrawal amount as a positive number.'); 
             return;
         }
+        if (!Number.isInteger(Number(withdrawal))) {
+            alert('Error: You must withdraw dollars only, not cents. Please round up or down and try again.'); 
+            return;
+        }
         if (Number(withdrawal) > Number(balance)) {
             alert('Your balance is too low. Please enter a lower withdrawal amount.'); 
             return;
         }
 
         else {
-        let newBalance = Number(balance) - Number(withdrawal)
+        let newBalance = parseInt(balance) - parseInt(withdrawal)
         setBalance(newBalance);
         const updateUrl = `/account/updateBalance/${currentUser.email}/${newBalance}/withdrawal/${withdrawal}`;
         (async () => {
-       var res = await fetch(updateUrl);
+       await fetch(updateUrl);
        setBalance(newBalance);
        setCurrentUser(user => ({
         ...user,

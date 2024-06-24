@@ -104,7 +104,7 @@ export default function Login(){
         ) : (
             <>
             <p>You are logged in as {currentUser.name}. You have access to the site as {currentUser.role === "admin" ? "an admin" : "a customer" }.</p>
-            <button type="submit" className="btn btn-light" onClick={logOut}>Log Out</button> <br />
+            <button type="button" className="btn btn-light" onClick={logOut}>Log Out</button> <br />
             </>
         )}
         />

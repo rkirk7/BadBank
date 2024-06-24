@@ -1,26 +1,47 @@
 import React from "react";
 import { Card, CurrentUser } from "./context";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Deposit(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-
     const [deposit, setDeposit] = React.useState(0);
     const [lastDeposit, setLastDeposit] = React.useState(0);
     const [balance, setBalance] = React.useState(currentUser.balance);
     const [formFilled, setFormFilled] = React.useState(true);
     const [depositComplete, setDepositComplete] = React.useState(false);
 
-    const url = `/account/balance/${currentUser.email}`;
+    const navigate = useNavigate();
+
+    const authorizationURL = `/account/authorization/`;
+    async function reviewAuthorization() {
+       var res = await fetch(authorizationURL);
+       if (res.ok) {
+       let user = await res.json();
+       if (!user.email) {
+           setTimeout(() => {
+            navigate('/');
+        }, 0);
+      }
+      }; 
+    }
+
     React.useEffect(() => {
-        getBalance();
+        reviewAuthorization();
       }, []);
+
+
+    const url = `/account/balance/${currentUser.email}`;
     
       async function getBalance() {
         var res = await fetch(url);
         var data = await res.json();
-        setBalance(data.balance);
+        setBalance(parseInt(data.balance));
      }
+     
+     React.useEffect(() => {
+        getBalance();
+      }, [reviewAuthorization]);
 
     function makeDeposit() {
         if (isNaN(Number(deposit))) {
@@ -31,9 +52,13 @@ export default function Deposit(){
             alert('Your deposit cannot be a negative number.'); 
             return;
         }
-        let newBalance = Number(deposit) + Number(balance)
+        if (!Number.isInteger(Number(deposit))) {
+            alert('Error: You must deposit dollars only, not cents. Please round up or down and try again.'); 
+            return;
+        }
+        let newBalance = parseInt(deposit) + parseInt(balance)
 
-        const url = `/account/updateBalance/${currentUser.email}/${newBalance}/deposit/${Number(deposit)}`;
+        const url = `/account/updateBalance/${currentUser.email}/${newBalance}/deposit/${parseInt(deposit)}`;
     (async () => {
        var res = await fetch(url);
        setBalance(newBalance);

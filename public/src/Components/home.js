@@ -1,28 +1,51 @@
-import React from "react";
+import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
 import '../App.css';
 
-
 export default function Home(){
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
+  const [isUserSet, setIsUserSet] = useState(false);
 
-    if (currentUser.email) {
-    const url = `/account/balance/${currentUser.email}`;
+  async function getBalance(email) {
+    const url = `/account/balance/${email}`;
+    var res = await fetch(url);
+    var data = await res.json();
+  setCurrentUser(user => ({
+    ...user,
+    balance: data.balance
+  }));     
+}
 
-    React.useEffect(() => {
-        getBalance();
+  const authorizationURL = `/account/authorization/`;
+    async function reviewAuthorization() {
+       var res = await fetch(authorizationURL);
+       if (res.ok) {
+       let user = await res.json();
+       if (!user.email) {
+        setCurrentUser({
+            name: '',
+            email: '',
+            balance: 0,
+            password: '',
+            role: 'none'
+           });
+           setIsUserSet(false);
+      } else {
+        setCurrentUser(user);
+        setIsUserSet(true);
+      }
+      }; 
+    }
+      React.useEffect(() => {
+        reviewAuthorization();
       }, []);
-    
-      async function getBalance() {
-        var res = await fetch(url);
-        var data = await res.json();
-      setCurrentUser(user => ({
-        ...user,
-        balance: data.balance
-      }));     
-    }
-    }
+
+      React.useEffect(() => {
+        if (isUserSet && currentUser.email) {
+        getBalance(currentUser.email);
+        }
+      }, [isUserSet]);
 
     return (
        <Card 
