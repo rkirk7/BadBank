@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CurrentUser, AllActivity } from "./context";
+import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
 import '../App.css';
 

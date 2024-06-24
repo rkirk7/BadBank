@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CurrentUser, AllActivity } from "./context";
+import { Card, CurrentUser } from "./context";
 
 export default function Login(){
     const { currentUser, setCurrentUser} = React.useContext(CurrentUser);
@@ -20,43 +20,55 @@ export default function Login(){
         return true;
     }
     
-    const url = `/account/loginfirebase/${email}/${password}`;
+    const url = `/account/login/`;
     const logOutUrl = `/account/logout/`;
     
     async function logIn(){
         if(!validate(email, 'Invalid Email')) return;
         if(!validate(password, 'Invalid Password')) return;
+         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            alert("Your email address is not formatted correctly.")
+            return;
+         }
+         if(password.length<8) {
+             alert('Your password must be at least eight characters.')
+             return;
+         }
         let success = false;
 
-        var res = await fetch(url);
-
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-             alert('Error: No account found for that email. Please try again, or create a new account.');
-             return;  
-         }
+        try {
+            var res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+                redirect: "follow",
+            });
 
          var data = await res.json();
-
-         if (email === data.email) {
+         if (data.code && data.name === 'FirebaseError') {
+            alert("Something went wrong. Please check your credentials and try again.")
+            return;
+         }
              success = true;
-             setCurrentUser(user => ({
+
+             setCurrentUser({
                  email: email,
                  name: data.name,
                  balance: data.balance,
                  role: data.role
-               }));  
+               });  
  
                alert('Success! You are now logged in.');
                setTimeout(() => {
                  navigate('/');
              }, 0);
-         }
-
-        if (!success) {
-            alert('Error: Your email or password were incorrect. Please try again.');
-        }
+    } catch (err) {
+        console.error('Error logging in', err);
+        alert('Error: There was an error logging in. Please try again.');
     }
+}
 
     async function logOut(){
         var res = await fetch(logOutUrl);
@@ -64,6 +76,7 @@ export default function Login(){
         setCurrentUser(user => ({
             email: '',
             name: '',
+            role: '',
             balance: 0
           }));  
           setTimeout(() => {
@@ -93,10 +106,8 @@ export default function Login(){
         </>
         ) : (
             <>
-            <h5>Success!</h5>
-            <p>You are logged in as {currentUser.name}. You have access to the site as a(n) {currentUser.role}.</p>
+            <p>You are logged in as {currentUser.name}. You have access to the site as {currentUser.role === "admin" ? "an admin" : "a customer" }.</p>
             <button type="submit" className="btn btn-light" onClick={logOut}>Log Out</button> <br />
-
             </>
         )}
         />

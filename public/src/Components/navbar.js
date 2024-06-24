@@ -1,29 +1,28 @@
 import React from "react";
-import { Route, Link, Routes, useLocation } from 'react-router-dom';
-import { CurrentUser, Card} from "./context";
-
+import { useLocation } from 'react-router-dom';
+import { CurrentUser } from "./context";
 
 export default function NavBar({}){
 
   const { currentUser } = React.useContext(CurrentUser);
 
   const location = useLocation();
-  const { hash, pathname, search } = location;
+  const { pathname } = location;
   let selected = `#${pathname}`
 
     if (currentUser.name) {
     return (
         <>
         
- <nav className="navbar navbar-expand-lg navbar-light">
+ <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
   <div className="container">
   <a className="navbar-brand" aria-current={selected === "#/" ? "page" : undefined} href="#" data-container="body" data-toggle="popover" data-placement="bottom" title="Home" data-trigger="hover focus">
        <img src={require('../Images/BadBankLogo.png')} className="img-navbar" alt="Bank Logo" />
      </a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
+          <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav mr-auto d-flex align-items-center">
               <li className={selected === "#/deposit/" ? "nav-item active" : "nav-item"}>
                 <a 
@@ -45,6 +44,17 @@ export default function NavBar({}){
                   title="Click here to withdraw fake money"
                   data-trigger="hover focus">
                   Withdraw
+                </a>
+              </li>
+              <li className={selected === "#/transfer/" ? "nav-item active" : "nav-item"}>
+                <a 
+                  className="nav-link" aria-current={selected === "#/withdraw/" ? "page" : undefined} href="#/transfer/"
+                  data-container="body" 
+                  data-toggle="popover" 
+                  data-placement="bottom" 
+                  title="Click here to transfer fake money"
+                  data-trigger="hover focus">
+                  Transfer
                 </a>
               </li>
               <li className={selected === "#/alldata/" ? "nav-item active" : "nav-item"}>
@@ -84,7 +94,7 @@ export default function NavBar({}){
   return (
     <>
 
-<nav className="navbar navbar-expand-lg navbar-light">
+<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
   <div className="container">
   <a className="navbar-brand" aria-current={selected === "#/" ? "page" : undefined} href="#" data-container="body" data-toggle="popover" data-placement="bottom" title="Home" data-trigger="hover focus">
        <img src={require('../Images/BadBankLogo.png')} className="img-navbar" alt="Bank Logo" />

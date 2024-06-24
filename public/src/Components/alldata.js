@@ -7,6 +7,11 @@ export default function AllData(){
   const { currentUser } = React.useContext(CurrentUser);
   const [data, setData] = React.useState([]);
   const [activityData, setActivityData] = React.useState([]);
+  const [showAllUsers, setShowAllUsers] = React.useState(true);
+  const [showActivity, setShowActivity] = React.useState(true);
+  const [userSearch, setUserSearch] = React.useState('');
+  const [activitySearch, setActivitySearch] = React.useState('');
+
   let userList;
 
   if (currentUser.role === 'admin') {
@@ -19,7 +24,13 @@ export default function AllData(){
     });
   }, []);
 
-userList = Array.isArray(data) && data.map(user => (
+  let userSearchQuery = data.filter((user) => {
+    return user.email && user.email.toLowerCase().includes(userSearch.toLowerCase());
+  }) || [];
+  
+
+
+userList = userSearchQuery.map(user => (
     <tr key={user._id}>
       <td>{user.name}</td>
       <td>${user.balance}</td>
@@ -37,7 +48,12 @@ React.useEffect(() => {
   });
 }, []);
 
-let activityList = Array.isArray(activityData) && activityData.slice().reverse().map(account => (
+let activitySearchQuery = activityData.filter((account) => {
+  return account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase());
+}) || [];
+
+
+let activityList = activitySearchQuery.slice().reverse().map(account => (
   <tr key={account._id}>
     <td>{account.email}</td>
     <td>{account.activity}</td>
@@ -47,10 +63,19 @@ let activityList = Array.isArray(activityData) && activityData.slice().reverse()
 
 return (
   <div>
-    
-      {(currentUser.role === "admin") &&
+      {currentUser.role === "admin" && (
+        <div>
+         <h1 className="tableheader"><a  className="myLink" onClick={ () => setShowAllUsers(!showAllUsers) }>Admin: All Users</a></h1>
+        { showAllUsers && ( <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+         <input type="text" placeholder="Search by Email" value={userSearch} onChange={e => {
+                setUserSearch(e.currentTarget.value);
+                }}></input>
+                </div>
+                )}
+      
+      {showAllUsers && (
+      
   <Table
-  header="Admin: All Users"
   id="usertable"
   col1="Name"
   col2="Balance"
@@ -58,17 +83,37 @@ return (
   col4="ID"
   list={userList}
   />
-      }
+      )}
+      </div>
+     )}
+     <div>
+     {currentUser.role === "admin" ? (
+      <div>
+     <h1 className="tableheader"><a className="myLink" onClick= { () => setShowActivity(!showActivity)}>Admin: All Bank Activity</a></h1>
+     {showActivity && (
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+        <input type="text" placeholder="Search by Email" value={activitySearch} onChange={e => {setActivitySearch(e.currentTarget.value);
+        }}>
+        </input>
+        </div>
+              )}
+     </div>
+     
+     ) : (
+      <h1 className="tableheader">My Activity</h1>
+     ) }
+
+      {showActivity && (
 
 <Table
-  header=  {currentUser.role === "admin" ? "Admin: All Bank Activity" : "My Activity"}
   id="activitytable"
   col1="Email"
   col2="Activity"
   col3="Date"
   list={activityList}
   />
-  
+      )}
+  </div>
   </div>
 
 );

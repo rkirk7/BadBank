@@ -1,10 +1,9 @@
 import React from "react";
-import { Card, CurrentUser, AllActivity } from "./context";
+import { Card, CurrentUser } from "./context";
 
 
 export default function Deposit(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-  //  const allActivity = React.useContext(AllActivity);
 
     const [deposit, setDeposit] = React.useState(0);
     const [lastDeposit, setLastDeposit] = React.useState(0);
@@ -46,9 +45,6 @@ export default function Deposit(){
         setDeposit(0);
         setDepositComplete(true);
     })();
-
-      //  let date = new Date();
-     //   allActivity.push({key:allActivity.length, userID:currentUser.key, name:currentUser.name, activity: `${currentUser.name} deposited $${deposit}`, balance:newBalance, time:date})
     }
     
 

@@ -1,7 +1,6 @@
 import React from "react";
 import {useState} from "react";
 
-export const AllActivity = React.createContext(null);
 export const CurrentUser  = React.createContext();
 
 export const CurrentUserProvider = ({ children }) => {
@@ -9,6 +8,7 @@ export const CurrentUserProvider = ({ children }) => {
       name: '',
       email: '',
       balance: 0,
+      password: '',
       role: 'none'
   });
 
@@ -45,9 +45,6 @@ export function Card(props) {
 export function Table(props) {
     return (
         <div className="container align-items-center justify-content-center">
-           <div className="card">
-             <div className="card-header text-center">{props.header}
-            <div className="card-body text-start">
         <table className="table">
           <thead>
             <tr>
@@ -62,9 +59,6 @@ export function Table(props) {
             {props.list}
           </tbody>
         </table>
-        </div>
-        </div>
-        </div>
         </div>
     );
 }

@@ -2,6 +2,7 @@ const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
+const { emit } = require('process');
 let db = null;
 
 const client = new MongoClient(uri, {
@@ -37,34 +38,77 @@ const firebaseConfig = {
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
 
-  async function createFirebase(name, email, password, role) {
+  async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
         throw new Error('Database connection not established');
     }
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password, role);
-        const user = userCredential.user;
-        create(name, email, role);
+        if (await checkAccount(email)) {
+            console.log('Account already exists.');
+            return true;
+        } else {
+            await createUserWithEmailAndPassword(auth, email, password);
+            console.log('firebase creation successful')
+            return await create(name, email, requestedRole);
+        }
       } catch (error) {
         console.error('Error creating user with Firebase:', error.code, error.message);
         throw error;
       }
   }
 
-  async function create(name, email, role) {
+  async function checkAccount(email) {
+    if (!db) {
+        throw new Error('Database connection not established');
+    }
+    try {
+        const docs = await db.collection('users').find( {"email" : email}).toArray();
+        if (docs[0]) {
+            return true;
+        } else {
+            return false;
+        }
+      } catch (error) {
+        throw error;
+      }
+  }
+
+  async function create(name, email, requestedRole) {
     if (!db) {
         throw new Error('database connection not successful');
     }
     const collection = db.collection('users');
-    const doc = {name, email, balance: 0, role};
+    const doc = {name, email, balance: 0, requestedRole};
     try {
         const result = await collection.insertOne(doc);
-        return await log(email, "Created account.", result);
+        return await log(email, `${email } created an account.`, result);
     } catch (err) {
         console.error('error inserting doc', err);
         throw err;
     }
   }
+
+  async function loginFirebase(email, password) {
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        return await login(email);
+    } catch (error) {
+        console.error('Error logging in with Firebase:', error.code, error.message);
+        return(error);
+    }
+}
+
+async function login(email) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        const docs = await db.collection('users').find( {"email" : email}).toArray();
+         return docs[0];
+    } catch (err) {
+        console.error('error retrieving docs', err);       
+    }
+}
 
   async function log(email, activity, data) {
     if (!db) {
@@ -72,9 +116,9 @@ const firebaseConfig = {
     }
     const collection = db.collection('activity');
     let date = new Date();
-    const doc = {email: email, activity: activity, date: date};
+    const doc = {email, activity, date};
     try {
-        const result = await collection.insertOne(doc);
+        await collection.insertOne(doc);
         return data;
     } catch (err) {
         console.error('error inserting doc', err);
@@ -107,6 +151,27 @@ async function balance(email) {
     }
 }
 
+async function transfer(fromemail, toemail, sentamount, frombalance, tobalance ) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        await db.collection('users').updateOne(
+            { email: fromemail },
+            { $set: { balance: frombalance } }
+        );
+        await db.collection('users').updateOne(
+            { email: toemail },
+            { $set: { balance: tobalance } }
+        );
+        let string = `${fromemail} transferred $${sentamount} to ${toemail}.`
+        await log(toemail, string, 'money received');
+        return log(fromemail, string, 'money sent'); 
+    } catch (err) {
+        console.error('error retrieving docs', err);
+    }
+}
+
 async function updateBalance(email, newamount, status, amount) {
     if (!db) {
         throw new Error('database connection not successful');
@@ -129,28 +194,6 @@ async function updateBalance(email, newamount, status, amount) {
     }
 }
 
-async function login(email) {
-    if (!db) {
-        throw new Error('database connection not successful');
-    }
-    try {
-        const docs = await db.collection('users').find( {"email" : email}).toArray();
-         return docs[0];
-         //await log(email, "Logged in.", docs[0]);
-    } catch (err) {
-        console.error('error retrieving docs', err);       
-    }
-}
-
-async function loginFirebase(email, password) {
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        return await login(email);
-    } catch (error) {
-        console.error('Error logging in with Firebase:', error.code, error.message);
-        return(error);
-    }
-}
 
 async function logout() {
     try {
@@ -180,4 +223,4 @@ async function getActivity(email, role) {
     }
 }
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity}
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer}

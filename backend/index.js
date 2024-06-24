@@ -1,20 +1,40 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 var dal = require('./dal.js');
+const bodyParser = require('body-parser');
+
 
 const app = express();
 const port = 3000;
 
 app.use(express.static('build'));
 app.use(cors());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "10mb" }));
 
-app.get('/account/createfirebase/:name/:email/:password/:role', async (req, res) => {
+
+app.post('/account/createaccount/', async (req, res) => {
+    const { name, email, password, requestedRole } = req.body;
     try {
-        const user = await dal.createFirebase(req.params.name, req.params.email, req.params.password, req.params.role);
+        const user = await dal.createFirebase(name, email, password, requestedRole);
         res.status(201).send(user);
     } catch (err) {
         console.error('error creating account', err);
         res.status(500).send({error: 'failed to create account'});
+    }
+});
+
+app.post('/account/login/', async function(req,res) {
+    const { email, password } = req.body;
+    try {
+        const user = await dal.loginFirebase(email, password);
+        res.send(user);
+
+    } catch (err) {
+        console.error('Error logging in:', err);
+        res.status(404).send({ error: 'Failed to find account' });
     }
 });
 
@@ -48,6 +68,16 @@ app.get('/account/updateBalance/:email/:newamount/:status/:amount', async functi
     }
 });
 
+app.get('/account/transfer/:fromemail/:toemail/:sentamount/:frombalance/:tobalance', async function(req,res) {
+    try {
+        const data = await dal.transfer(req.params.fromemail, req.params.toemail, Number(req.params.sentamount), Number(req.params.frombalance), Number(req.params.tobalance));
+        res.send(data);
+    } catch (err) {
+        console.error('Error updating balance', err);
+        res.status(500).send({ error: 'Failed to update balance' });
+    }
+});
+
 app.get('/account/getActivity/:email/:role', async function(req,res) {
     try {
         const data = await dal.getActivity(req.params.email, req.params.role);
@@ -62,16 +92,6 @@ app.get('/account/logout/', async function(req,res) {
     try {
         const resp = await dal.logout();
         res.send(resp);
-    } catch (err) {
-        res.status(404).send({ error: 'Failed to find account' });
-    }
-});
-
-
-app.get('/account/loginfirebase/:email/:password', async function(req,res) {
-    try {
-        const data = await dal.loginFirebase(req.params.email, req.params.password);
-        res.send(data);
     } catch (err) {
         res.status(404).send({ error: 'Failed to find account' });
     }

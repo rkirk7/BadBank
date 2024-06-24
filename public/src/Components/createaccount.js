@@ -1,6 +1,7 @@
 import React from "react";
 import { CurrentUser, Card} from "./context";
 import { useNavigate } from "react-router-dom";
+import { overwriteMiddlewareResult } from "mongoose";
 
 export default function CreateAccount(){
 
@@ -23,7 +24,7 @@ export default function CreateAccount(){
         return true;
     }
 
-    function handleFirebaseCreate() {
+    async function handleCreate() {
         let requestedRole = 'user';
         if(!validate(name, 'name')) {
             alert('Name is a required field.')
@@ -49,33 +50,42 @@ export default function CreateAccount(){
             alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
         }
 
-             const url = `/account/createfirebase/${name}/${email}/${password}/${requestedRole}`;
-             (async () => {
-                var res = await fetch(url);
-               
-                setCurrentUser(user => ({
-                 email: email,
-                 name: name,
-                 balance: 0,
-                 role: requestedRole
-               }));
-              
-               setTimeout(() => {
-                 navigate('/');
-             }, 0);
+             const url = `/account/createaccount/`;
 
-        setShow(false);
-             })();
+            try {
+                var res = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, password, requestedRole }),
+                    redirect: "follow",
+                }
+                );
+
+                const newUser = await res.json();
+                console.log(JSON.stringify(res));
+
+                if (newUser === true) {
+                    alert ("An account already exists for this email. Please log in.")
+                    return;
+                } else {
+
+            setCurrentUser({
+                email: email,
+                name: name,
+                balance: 0,
+                role: requestedRole
+              });
+              setShow(false);
+              alert("Account created! You are now logged in.");
+              navigate("/");
+            }
+    } catch (err) {
+        alert('Error: There was an error creating your account. Please try again.');
+        throw(err);
     }
-
-    function clearForm(){
-        setName('');
-        setEmail('');
-        setPassword('');
-        setFormFilled(false);
-        setShow(true);
-    }
-
+}
 
     React.useEffect(() =>{
         setFormFilled(name != '' && email != '' && password != ''); 
@@ -86,7 +96,7 @@ export default function CreateAccount(){
         bgcolor="primary"
         header="Create Account"
         status={status}
-        body={show ? (
+        body={
             <>
             Name<br/>
             <input type="input" className="form-control" id="name" placeholder="Enter Name" value={name} onChange={e => setName(e.currentTarget.value)} /> <br />
@@ -98,15 +108,9 @@ export default function CreateAccount(){
         <label htmlFor="checkbox" className="form-check-label">
           Request administrative access
         </label><br /><br />
-            <button id="submit" type="submit" className="btn btn-light" onClick={handleFirebaseCreate} disabled={!formFilled}>Create Account</button> <br />
+            <button id="submit" type="submit" className="btn btn-light" onClick={handleCreate} disabled={!formFilled}>Create Account</button> <br />
         </>
-        ) : (
-            <>
-            <h5>Success!</h5>
-            <p>You are logged in as {currentUser.name}.</p>
-            <button type="submit" className="btn btn-light" onClick={clearForm}>Create Another Account</button> <br />
-            </>
-        )}
+        }
         />
     );
 }

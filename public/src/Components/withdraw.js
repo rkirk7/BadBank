@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CurrentUser, AllActivity } from "./context";
+import { Card, CurrentUser } from "./context";
 
 export default function Withdraw(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);

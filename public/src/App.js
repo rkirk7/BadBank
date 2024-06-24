@@ -13,7 +13,6 @@ import React from 'react';
 
 function App() {
   return (
-    <NavBar></NavBar>,
   <Spa></Spa>
   );
 }
