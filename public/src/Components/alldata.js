@@ -51,7 +51,6 @@ export default function AllData(){
     return user.email && user.email.toLowerCase().includes(userSearch.toLowerCase());
   }) || [];
   
-
 userList = userSearchQuery.map(user => (
     <tr key={user._id}>
       <td>{user.name}</td>

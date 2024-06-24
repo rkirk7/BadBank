@@ -41,7 +41,8 @@ export default function Deposit(){
         setBalance(parseInt(data.balance));
      }
 
-    function makeDeposit() {
+    function makeDeposit(e) {
+        e.preventDefault();
         if (isNaN(Number(deposit))) {
             alert('Your deposit must be a valid number.'); 
             return;
@@ -85,16 +86,14 @@ export default function Deposit(){
         title={depositComplete && `You have successfully deposited $${lastDeposit}!`}       
         body={
             <>
+            <form>
             Deposit Amount<br/>
             <input type="input" className="form-control" id="deposit" placeholder="Enter Deposit Amount" value={deposit} onChange={e => {
                 setDeposit(e.currentTarget.value);
                 setDepositComplete(false);
                 }} /> <br /> 
-        </>
-        }
-        centered={
-    <>
             <button type="submit" className="btn btn-light" onClick={makeDeposit} disabled={!formFilled}>Make Deposit</button> <br />
+            </form>
     </>
         }
         />

@@ -57,10 +57,15 @@ export default function Home(){
        txtcolor="white"
        header="Regan's Bad Bank"
        title={currentUser.name != '' ? `Welcome, ${currentUser.name}.` : ''}       
-       body={currentUser.name != '' ? `Your current balance is $${currentUser.balance}. You can make a deposit or withdraw fake cash!` : 
+       body={currentUser.name != '' ? (
+      <>
+       Your current balance is ${currentUser.balance}. You can <Link to="/deposit" className="mylink">make a deposit</Link> or <Link to="/withdraw" className="mylink">withdraw fake cash</Link>!
+       </>
+       ) : (
        <>
        Please <Link to="/login" className="mylink">log in</Link> or <Link to="/CreateAccount" className="mylink">create an account</Link> to continue.
      </>
+       )
       }       
        centered={(<img src={require ('../Images/BadBankLogo.png')} className="img-fluid" alt="Bank Icon" />)}
        

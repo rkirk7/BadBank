@@ -42,7 +42,8 @@ export default function Withdraw(){
 
 
 
-    function makeWithdrawal() {
+    function makeWithdrawal(e) {
+        e.preventDefault();
         if (isNaN(Number(withdrawal))) {
             alert('Your withdrawal must be a valid number.'); 
             return;
@@ -91,17 +92,15 @@ export default function Withdraw(){
         title={withdrawalComplete && `You have successfully withdrawn $${lastWithdrawal}!`}       
         body= {
             <>
+            <form>
             Withdrawal Amount<br/>
             <input type="input" className="form-control" id="withdrawal" placeholder="Enter Withdrawal Amount" value={withdrawal} onChange={e => {
                 setWithdrawal(e.currentTarget.value);
                 setWtihdrawalComplete(false);
                 }} /> <br /> 
-            </>
-        }
-        
-        centered={
-        <>          
+
   <button type="submit" className="btn btn-light" onClick={makeWithdrawal} disabled={!formFilled}>Make Withdrawal</button> <br />
+  </form>
         </>
         }
         />

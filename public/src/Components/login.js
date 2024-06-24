@@ -23,7 +23,8 @@ export default function Login(){
     const url = `/account/login/`;
     const logOutUrl = `/account/logout/`;
     
-    async function logIn(){
+    async function logIn(e){
+        e.preventDefault();
         if(!validate(email, 'Invalid Email')) return;
         if(!validate(password, 'Invalid Password')) return;
          if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
@@ -95,16 +96,18 @@ export default function Login(){
         status={status}
         body={(!currentUser.name) ? (
             <>
+            <form>
             Email Address<br/>
             <input type="input" className="form-control" id="email" placeholder="Enter Email Address" value={email} onChange={e => setEmail(e.currentTarget.value)} /> <br />
             Password<br/>
             <input type="password" className="form-control" id="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.currentTarget.value)} /> <br />
             <button type="submit" className="btn btn-light" onClick={logIn} disabled={!formFilled}>Log In</button> <br />
+            </form>
         </>
         ) : (
             <>
             <p>You are logged in as {currentUser.name}. You have access to the site as {currentUser.role === "admin" ? "an admin" : "a customer" }.</p>
-            <button type="button" className="btn btn-light" onClick={logOut}>Log Out</button> <br />
+            <button type="submit" className="btn btn-light" onClick={logOut}>Log Out</button> <br />
             </>
         )}
         />

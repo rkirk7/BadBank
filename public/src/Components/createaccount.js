@@ -23,7 +23,8 @@ export default function CreateAccount(){
         return true;
     }
 
-    async function handleCreate() {
+    async function handleCreate(e) {
+        e.preventDefault();
         let requestedRole = 'user';
         if(!validate(name, 'name')) {
             alert('Name is a required field.')
@@ -103,6 +104,7 @@ export default function CreateAccount(){
         status={status}
         body={
             <>
+            <form>
             Name<br/>
             <input type="input" className="form-control" id="name" placeholder="Enter Name" value={name} onChange={e => setName(e.currentTarget.value)} /> <br />
             Email Address<br/>
@@ -114,6 +116,7 @@ export default function CreateAccount(){
           Request administrative access
         </label><br /><br />
             <button id="submit" type="submit" className="btn btn-light" onClick={handleCreate} disabled={!formFilled}>Create Account</button> <br />
+            </form>
         </>
         }
         />
