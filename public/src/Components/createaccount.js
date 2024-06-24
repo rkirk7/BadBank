@@ -56,6 +56,11 @@ export default function CreateAccount(){
              const url = `/account/createaccount/`;
 
             try {
+                if (role) {
+                    requestedRole = 'requestedAdmin';
+                    alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
+                }
+
                 var res = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -72,11 +77,6 @@ export default function CreateAccount(){
                     alert ("An account already exists for this email. Please log in.")
                     return;
                 } else {
-
-             if (role) {
-                        requestedRole = 'requestedAdmin';
-                        alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
-                    }
 
             setCurrentUser({
                 email: email,
