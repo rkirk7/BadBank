@@ -29,9 +29,10 @@ export default function AllData(){
   }
 
   React.useEffect(() => {
-      reviewAuthorization();
-    }, []);
-
+    if (currentUser.email === '') {
+    reviewAuthorization();
+    } 
+  }, []);
 
   let userList;
 

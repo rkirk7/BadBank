@@ -27,21 +27,19 @@ export default function Deposit(){
     }
 
     React.useEffect(() => {
+        if (currentUser.email === '') {
         reviewAuthorization();
+        } else {
+            getBalance();
+        }
       }, []);
-
-
-    const url = `/account/balance/${currentUser.email}`;
     
       async function getBalance() {
+        const url = `/account/balance/${currentUser.email}`;
         var res = await fetch(url);
         var data = await res.json();
         setBalance(parseInt(data.balance));
      }
-     
-     React.useEffect(() => {
-        getBalance();
-      }, [reviewAuthorization]);
 
     function makeDeposit() {
         if (isNaN(Number(deposit))) {

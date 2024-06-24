@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CurrentUser } from "./context";
+import { useNavigate } from "react-router-dom";
 
 export default function Withdraw(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
@@ -9,12 +10,31 @@ export default function Withdraw(){
     const [formFilled, setFormFilled] = React.useState(true);
     const [withdrawalComplete, setWtihdrawalComplete] = React.useState(false);
 
-    const url = `/account/balance/${currentUser.email}`;
+    const navigate = useNavigate();
+
+    const authorizationURL = `/account/authorization/`;
+    async function reviewAuthorization() {
+       var res = await fetch(authorizationURL);
+       if (res.ok) {
+       let user = await res.json();
+       if (!user.email) {
+           setTimeout(() => {
+            navigate('/');
+        }, 0);
+      }
+      }; 
+    }
+
     React.useEffect(() => {
-        getBalance();
+        if (currentUser.email === '') {
+        reviewAuthorization();
+        }  else {
+            getBalance();
+        }
       }, []);
-    
+
       async function getBalance() {
+        const url = `/account/balance/${currentUser.email}`;
         var res = await fetch(url);
         var data = await res.json();
         setBalance(parseInt(data.balance));

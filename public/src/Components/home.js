@@ -38,7 +38,11 @@ export default function Home(){
       }; 
     }
       React.useEffect(() => {
+        if (currentUser.email === '') {
         reviewAuthorization();
+        } else {
+          setIsUserSet(true);
+        }
       }, []);
 
       React.useEffect(() => {
