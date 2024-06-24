@@ -34,10 +34,11 @@ export default function CreateAccount(){
             alert('email is a required field.')
             return;
         } 
-        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-                alert("Your email address is not formatted correctly.")
-                return;
+        if (!email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+            alert("Your email address is not formatted correctly.");
+            return;
         }
+        
         let result = /^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/.test(name);
         if (!result) {
             alert('Please enter a valid, full name.')
