@@ -70,8 +70,7 @@ export default function NavBar({}){
               </li>
             </ul>
         </div>
-        <div className="collapse navbar-collapse align-items-center justify-content-center">
-       </div>
+
         <div className="collapse navbar-collapse align-items-center justify-content-end">
       <ul className="navbar-nav">
       <li className={selected === "#/login/" ? "nav-item active" : "nav-item"} >
@@ -102,9 +101,7 @@ export default function NavBar({}){
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
-        <div className="collapse navbar-collapse align-items-center justify-content-center">
-       </div>
-        <div className="collapse navbar-collapse align-items-center justify-content-end">
+        <div className="collapse navbar-collapse align-items-center justify-content-end" id="navbarCollapse">
         <ul className="navbar-nav">
       <li className={selected === "#/login/" ? "nav-item active" : "nav-item"} >
     <a 
