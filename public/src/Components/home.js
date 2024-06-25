@@ -32,7 +32,11 @@ export default function Home(){
        });
        setIsUserSet(false);
   } else {
-    console.log(`current user should be: ${auth.name}`)
+    setCurrentUser(user => ({
+      ...user,
+      email: auth.email
+    })); 
+    console.log(`current user should be: ${auth.email}`)
     setIsUserSet(true);
   }
   async function getBalance(email) {
