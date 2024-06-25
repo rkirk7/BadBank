@@ -1,7 +1,7 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserLocalPersistence, signOut } = require("firebase/auth");
 
 let db = null;
 
@@ -47,8 +47,17 @@ const firebaseConfig = {
             console.log('Account already exists.');
             return true;
         } else {
-            await createUserWithEmailAndPassword(auth, email, password);
-            return await create(name, email, requestedRole);
+            setPersistence(auth, browserLocalPersistence)
+            .then(() => {
+                createUserWithEmailAndPassword(auth, email, password);
+                return create(name, email, requestedRole);
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              return(errorMessage);
+            });
+          
         }
       } catch (error) {
         console.error('Error creating user with Firebase:', error.code, error.message);
@@ -89,8 +98,16 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
-        await signInWithEmailAndPassword(auth, email, password);
-        return await login(email);
+        setPersistence(auth, browserLocalPersistence)
+            .then(() => {
+                signInWithEmailAndPassword(auth, email, password);
+                return login(email);
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              return(errorMessage);
+            });
     } catch (error) {
         console.error('Error logging in with Firebase:', error.code, error.message);
         return(error);
