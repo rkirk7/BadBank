@@ -8,8 +8,6 @@ export default function Transfer(){
     const [transferAmount, setTransferAmount] = React.useState(0);
     const [lastTransfer, setLastTransfer] = React.useState(0);
     const [toEmail, setToEmail] = React.useState('');
-    const [fromBalance, setFromBalance] = React.useState(currentUser.balance);
-    const [toBalance, setToBalance] = React.useState(0);
     const [formFilled, setFormFilled] = React.useState(true);
     const [transferComplete, setTransferComplete] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
@@ -28,7 +26,8 @@ export default function Transfer(){
         loadPage();
     }, []);
 
-    async function makeTransfer() {
+    async function makeTransfer(e) {  
+        e.preventDefault();
         try {
             if (isNaN(Number(transferAmount))) {
                 alert('Your transfer must be a valid number.'); 
@@ -56,20 +55,20 @@ export default function Transfer(){
             }
     
             let receiveUserBalanceURL = `/account/balance/${toEmail}`;
-    
             const res2 = await fetch(receiveUserBalanceURL);
+    
+            if (!res2.ok) {
+                throw new Error(`Failed to fetch recipient's balance: ${res2.status}`);
+            }
+    
             const data2 = await res2.json();
     
             if (!data2) {
-                alert("Error: Could not find recipient's account. Please check their email and try again.")
-                return;
+                throw new Error("Recipient's account data not found");
             }
     
             let newFromBalance = parseInt(currentUser.balance) - parseInt(transferAmount);
             let newToBalance = parseInt(data2.balance) + parseInt(transferAmount);
-    
-            setFromBalance(newFromBalance);
-            setToBalance(newToBalance);
     
             const url = `/account/transfer/${currentUser.email}/${toEmail}/${transferAmount}/${newFromBalance}/${newToBalance}`;
             await fetch(url);
@@ -91,6 +90,7 @@ export default function Transfer(){
     }
     
     
+    
     React.useEffect(() =>{
         setFormFilled(transferAmount != '0' && transferAmount != '' && toEmail != null && toEmail != ''); 
     }, [transferAmount, toEmail])
@@ -98,7 +98,6 @@ export default function Transfer(){
     return (
         <>
         {!loading && (
-            <form>
         <Card 
         bgcolor="primary"
         txtcolor="white"
@@ -107,6 +106,7 @@ export default function Transfer(){
         title={transferComplete && `You have successfully transferred $${lastTransfer}!`}       
         body={
             <>
+            <form>
             Transfer Amount<br/>
             <input type="input" className="form-control" id="transfer" placeholder="Enter Transfer Amount" value={transferAmount} onChange={e => {
                 setTransferAmount(e.currentTarget.value);
@@ -117,15 +117,12 @@ export default function Transfer(){
                 setToEmail(e.currentTarget.value);
                 setTransferComplete(false);
                 }} /> <br />     
+                 <button type="submit" className="btn btn-light" onClick={makeTransfer} disabled={!formFilled}>Make Transfer</button> <br />
+                 </form>
+                 
         </>
         }
-        centered={
-    <>
-            <button type="submit" className="btn btn-light" onClick={makeTransfer} disabled={!formFilled}>Make Transfer</button> <br />
-    </>
-        }
         />
-        </form>
         )} </>
      );
  }
