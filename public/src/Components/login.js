@@ -32,7 +32,7 @@ export default function Login(){
             return;
          }
          if(password.length<8) {
-             alert('Your password must be at least eight characters.')
+             alert('Your password is incorrect.')
              return;
          }
 

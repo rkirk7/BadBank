@@ -49,7 +49,7 @@ export default function CreateAccount(){
             return;
         }
         if(password.length<8) {
-            alert('Your password is incorrect.')
+            alert('Your password must have at least eight characters.')
             return;
         }
 
