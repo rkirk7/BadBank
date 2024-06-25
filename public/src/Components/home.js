@@ -2,8 +2,12 @@ import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
 import '../App.css';
+const { getAuth } = require("firebase/auth");
 
 export default function Home(){
+  const auth = getAuth();
+  console.log(JSON.stringify(auth));
+  console.log(auth.email);
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
   const [isUserSet, setIsUserSet] = useState(false);
 

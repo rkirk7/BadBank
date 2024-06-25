@@ -231,7 +231,7 @@ async function getActivity(email, role) {
 async function checkAuthorization() {
     const auth = getAuth(firebaseApp);
 const user = auth.currentUser;
-console.log(`check auth: ${auth}, ${auth.currentUser}`);
+console.log(`check auth: ${JSON.stringify(auth)}, ${auth.email}`);
 
 if (user) {
     const docs = await db.collection('users').find({ "email": user.email }).toArray();
