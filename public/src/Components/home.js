@@ -6,6 +6,9 @@ const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/auth");
 
 export default function Home(){
+  const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
+  const [isUserSet, setIsUserSet] = useState(false);
+
 
   const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
@@ -19,7 +22,6 @@ export default function Home(){
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth(firebaseApp);
   console.log(JSON.stringify(auth));
-  console.log(auth.email);
   if (!auth.email) {
     setCurrentUser({
         name: '',
@@ -33,10 +35,6 @@ export default function Home(){
     console.log(`current user should be: ${auth.name}`)
     setIsUserSet(true);
   }
-
-  const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-  const [isUserSet, setIsUserSet] = useState(false);
-
   async function getBalance(email) {
     const url = `/account/balance/${email}`;
     var res = await fetch(url);
