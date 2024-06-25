@@ -90,8 +90,7 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
-       await setPersistence(auth, inMemoryPersistence);
-       console.log(`auth current user: ${auth.currentUser.email}`);
+     //  await setPersistence(auth, inMemoryPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
