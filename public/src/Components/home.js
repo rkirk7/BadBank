@@ -6,6 +6,7 @@ import '../App.css';
 export default function Home(){
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
   const [isUserSet, setIsUserSet] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function getBalance(email) {
     const url = `/account/balance/${email}`;
@@ -14,7 +15,8 @@ export default function Home(){
   setCurrentUser(user => ({
     ...user,
     balance: data.balance
-  }));     
+  }));
+  setLoading(false);     
 }
 
   const authorizationURL = `/authorization/`;
@@ -32,6 +34,7 @@ export default function Home(){
             role: 'none'
            });
            setIsUserSet(false);
+           setLoading(false);
       } else {
         setCurrentUser(user);
         setIsUserSet(true);
@@ -62,6 +65,8 @@ export default function Home(){
       }, [isUserSet]);
 
     return (
+      <>
+         {!loading && (
        <Card 
        bgcolor="primary"
        txtcolor="white"
@@ -80,5 +85,7 @@ export default function Home(){
        centered={(<img src={require ('../Images/BadBankLogo.png')} className="img-fluid" alt="Bank Icon" />)}
        
        />
+      )}
+       </>
     );
 }
