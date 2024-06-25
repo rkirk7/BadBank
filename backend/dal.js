@@ -17,9 +17,8 @@ const client = new MongoClient(uri, {
     try {
       await client.connect();
       await client.db("myproject").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
       db = client.db("myproject");
-      if (db) console.log('database found');
+      if (db) console.log('Mongo database found');
     } catch(error) {
         console.log('error:', error);
     }
@@ -36,7 +35,7 @@ const firebaseConfig = {
   };
   
   const firebaseApp = initializeApp(firebaseConfig);
-  const auth = getAuth(firebaseApp);
+  const auth = getAuth();
 
   async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
@@ -44,10 +43,9 @@ const firebaseConfig = {
     }
     try {
         if (await checkAccount(email)) {
-            console.log('Account already exists.');
             return true;
         } else {
-            await setPersistence(auth, inMemoryPersistence);
+           // await setPersistence(auth, inMemoryPersistence);
                 await createUserWithEmailAndPassword(auth, email, password);
                 return await create(name, email, requestedRole);          
         }
@@ -90,7 +88,7 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
-       await setPersistence(auth, browserLocalPersistence);
+      // await setPersistence(auth, browserLocalPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
@@ -228,6 +226,16 @@ async function getActivity(email, role) {
 async function checkAuthorization() {
     return new Promise((resolve, reject) => {
         try {
+            const user = auth.currentUser;
+
+if (user !== null) {
+  user.providerData.forEach((profile) => {
+    console.log("Sign-in provider: " + profile.providerId);
+    console.log("  Provider-specific UID: " + profile.uid);
+    console.log("  Name: " + profile.displayName);
+    console.log("  Email: " + profile.email);
+  });
+}
             const unsubscribe = onAuthStateChanged(auth, async (user) => {
                 if (!user) {
                     resolve(null);
