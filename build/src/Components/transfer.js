@@ -3,6 +3,7 @@ import { Card, CurrentUser } from "./context";
 import {checkAuthentication, getBalance} from "./loading"
 import { useNavigate } from "react-router-dom";
 
+
 export default function Transfer(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
     const [transferAmount, setTransferAmount] = React.useState(0);
