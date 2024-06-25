@@ -1,12 +1,9 @@
 import React from "react";
-import { Card, CurrentUser } from "./context";
+import { CurrentUser } from "./context";
 import { useNavigate } from "react-router-dom";
-import { balance } from "../../../backend/dal";
-
 
 export default async function Loading(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-    const [isLoading, setIsLoading] = React.useState(true);
 
     const navigate = useNavigate();
 
@@ -61,5 +58,5 @@ export default async function Loading(){
           })); 
      }
 
-    return (currentUser);
+    return;
  }
