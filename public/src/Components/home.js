@@ -21,8 +21,8 @@ export default function Home(){
   
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth(firebaseApp);
-  console.log(auth.currentUser.email);
   if (!auth.currentUser) {
+    console.log('no user found');
     setCurrentUser({
         name: '',
         email: '',
@@ -32,6 +32,7 @@ export default function Home(){
        });
        setIsUserSet(false);
   } else {
+    console.log(auth.currentUser.email);
     setCurrentUser(user => ({
       ...user,
       email: auth.currentUser.email
