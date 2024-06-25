@@ -91,7 +91,9 @@ const firebaseConfig = {
   async function loginFirebase(email, password) {
     try {
         const auth = getAuth();
+        console.log('setting persistence for auth', ${JSON.stringify(auth)});
        await setPersistence(auth, browserSessionPersistence)
+       console.log('login info', JSON.stringify(auth));
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
@@ -237,6 +239,7 @@ if (user) {
 } else {
   return(null);
 }
+}
 
 
     // try {
@@ -257,6 +260,6 @@ if (user) {
     // } catch {
     //     resolve(null);
     // }
-}
+//}
 
   module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}
