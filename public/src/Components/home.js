@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
-import {Loading} from "./loading"
+import {CheckAuthentication} from "./loading"
 import '../App.css';
 
 export default function Home(){
@@ -11,7 +11,7 @@ export default function Home(){
 
   React.useEffect(() => {
     if (currentUser.email === '') {
-    Loading();
+    CheckAuthentication();
     setTimeout(() => {
      setLoading(false);
   }, 0);

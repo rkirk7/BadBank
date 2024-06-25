@@ -2,7 +2,7 @@ import React from "react";
 import { CurrentUser } from "./context";
 import { useNavigate } from "react-router-dom";
 
-export default async function Loading(){
+export default function CheckAuthentication() {
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
 
     const navigate = useNavigate();
