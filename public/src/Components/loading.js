@@ -1,5 +1,3 @@
-
-
 export async function checkAuthentication(setCurrentUser, navigate) {
     const authorizationURL = `/authorization/`;
     try {
