@@ -1,7 +1,7 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence, inMemoryPersistence } = require("firebase/auth");
 
 let db = null;
 
@@ -47,7 +47,7 @@ const firebaseConfig = {
             console.log('Account already exists.');
             return true;
         } else {
-            await setPersistence(auth, browserSessionPersistence)
+            await setPersistence(auth, inMemoryPersistence);
                 await createUserWithEmailAndPassword(auth, email, password);
                 return await create(name, email, requestedRole);          
         }
@@ -91,9 +91,7 @@ const firebaseConfig = {
   async function loginFirebase(email, password) {
     try {
         const auth = getAuth();
-        console.log(`setting persistence for auth, ${JSON.stringify(auth)}`);
-       await setPersistence(auth, browserSessionPersistence)
-       console.log('login info', JSON.stringify(auth));
+       await setPersistence(auth, inMemoryPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
