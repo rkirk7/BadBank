@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
 import '../App.css';
-import { checkAuthorization } from "../../../backend/dal";
 
 export default function Home(){
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
@@ -18,41 +17,39 @@ export default function Home(){
   }));     
 }
 
-checkAuthorization()
-    .then(user => {
-        if (user) {
-            console.log('User authorized:', user);
-        } else {
-            console.log('No user authorized');
-        }
-    })
-    .catch(error => {
-        console.error('Error checking authorization:', error);
-    });
+  const authorizationURL = `/account/authorization/`;
 
-  // const authorizationURL = `/account/authorization/`;
-  //   async function reviewAuthorization() {
-  //      var res = await fetch(authorizationURL);
-  //      if (res.ok) {
-  //      let user = await res.json();
-  //      if (!user.email) {
-  //       setCurrentUser({
-  //           name: '',
-  //           email: '',
-  //           balance: 0,
-  //           password: '',
-  //           role: 'none'
-  //          });
-  //          setIsUserSet(false);
-  //     } else {
-  //       setCurrentUser(user);
-  //       setIsUserSet(true);
-  //     }
-  //     }; 
-  //   }
+    async function reviewAuthorization() {
+       var res = await fetch(authorizationURL);
+       if (res.ok) {
+       let user = await res.json();
+       if (!user.email) {
+        setCurrentUser({
+            name: '',
+            email: '',
+            balance: 0,
+            password: '',
+            role: 'none'
+           });
+           setIsUserSet(false);
+      } else {
+        setCurrentUser(user);
+        setIsUserSet(true);
+      }
+      } else {
+        setCurrentUser({
+          name: '',
+          email: '',
+          balance: 0,
+          password: '',
+          role: 'none'
+         });
+         setIsUserSet(false);
+      }
+    }
       React.useEffect(() => {
         if (currentUser.email === '') {
-        checkAuthorization();
+        reviewAuthorization();
         } else {
           setIsUserSet(true);
         }
