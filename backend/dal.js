@@ -229,7 +229,6 @@ async function checkAuthorization() {
         try {
             onAuthStateChanged(auth, async (user) => {
                 if (!user) {
-                    console.log(`auth state changed found no user`);
                     resolve(null);
                 } else {
                     console.log(`authorization user: ${user.email}`);

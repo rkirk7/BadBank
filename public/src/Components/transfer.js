@@ -29,69 +29,67 @@ export default function Transfer(){
     }, []);
 
     async function makeTransfer() {
-           if (isNaN(Number(transferAmount))) {
-            alert('Your transfer must be a valid number.'); 
-            return;
-        }
-        if ((Number(transferAmount)) <= 0) {
-            alert('Your transfer cannot be a negative number.'); 
-            return;
-        }
-
-        if (Number(transferAmount) > Number(currentUser.balance)) {
-            alert('Your balance is too low. Please enter a lower amount.'); 
-            return;
-        }
-        if (!Number.isInteger(Number(transferAmount))) {
-            alert('Error: You must transfer dollars only, not cents. Please round up or down and try again.'); 
-            return;
-        }
-        if (toEmail === currentUser.email){
-            alert("You cannot transfer money to yourself. Please enter a valid recipient.")
-            return;
-        }
-        if (!toEmail.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-            alert('You must enter a valid email address for the recipient. Please try again.'); 
-            return;
-        }
-
-        let receiveUserBalanceURL = `/account/balance/${toEmail}`;
-
-           async function getRecipientBalance() {
-            try {
-            var res2 = await fetch(receiveUserBalanceURL);
-            var data2 = await res2.json();
+        try {
+            if (isNaN(Number(transferAmount))) {
+                alert('Your transfer must be a valid number.'); 
+                return;
+            }
+            if ((Number(transferAmount)) <= 0) {
+                alert('Your transfer cannot be a negative number.'); 
+                return;
+            }
+            if (Number(transferAmount) > Number(currentUser.balance)) {
+                alert('Your balance is too low. Please enter a lower amount.'); 
+                return;
+            }
+            if (!Number.isInteger(Number(transferAmount))) {
+                alert('Error: You must transfer dollars only, not cents. Please round up or down and try again.'); 
+                return;
+            }
+            if (toEmail === currentUser.email){
+                alert("You cannot transfer money to yourself. Please enter a valid recipient.")
+                return;
+            }
+            if (!toEmail.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+                alert('You must enter a valid email address for the recipient. Please try again.'); 
+                return;
+            }
+    
+            let receiveUserBalanceURL = `/account/balance/${toEmail}`;
+    
+            const res2 = await fetch(receiveUserBalanceURL);
+            const data2 = await res2.json();
+    
             if (!data2) {
                 alert("Error: Could not find recipient's account. Please check their email and try again.")
                 return;
             }
+    
             let newFromBalance = parseInt(currentUser.balance) - parseInt(transferAmount);
             let newToBalance = parseInt(data2.balance) + parseInt(transferAmount);
-           setFromBalance(newFromBalance);
-           setToBalance(newToBalance);
+    
+            setFromBalance(newFromBalance);
+            setToBalance(newToBalance);
     
             const url = `/account/transfer/${currentUser.email}/${toEmail}/${transferAmount}/${newFromBalance}/${newToBalance}`;
-
-        (async () => {
-            console.log('fetching url:', url);
-           await fetch(url);
-           
-           setCurrentUser(user => ({
-            ...user,
-            balance: fromBalance
-          })); 
+            await fetch(url);
+    
+            setCurrentUser(user => ({
+                ...user,
+                balance: newFromBalance
+            }));
+    
             setLastTransfer(transferAmount);
             setTransferAmount(0);
             setToEmail('');
             setTransferComplete(true);
-        })();
-            } catch {
-                alert("Error: Could not find recipient's account. Please check their email and try again.")
-            return;
-            }
+    
+        } catch (error) {
+            console.error('Transfer failed:', error);
+            alert('Failed to make transfer. Please try again.');
         }
-        await getRecipientBalance();
     }
+    
     
     React.useEffect(() =>{
         setFormFilled(transferAmount != '0' && transferAmount != '' && toEmail != null && toEmail != ''); 

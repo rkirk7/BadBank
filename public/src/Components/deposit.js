@@ -42,7 +42,7 @@ export default function Deposit(){
             alert('Error: You must deposit dollars only, not cents. Please round up or down and try again.'); 
             return;
         }
-        let newBalance = parseInt(deposit) + parseInt(balance)
+        let newBalance = parseInt(deposit) + parseInt(currentUser.balance)
 
         const url = `/account/updateBalance/${currentUser.email}/${newBalance}/deposit/${parseInt(deposit)}`;
     (async () => {

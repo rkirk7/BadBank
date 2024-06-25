@@ -42,13 +42,13 @@ export default function Withdraw(){
             alert('Error: You must withdraw dollars only, not cents. Please round up or down and try again.'); 
             return;
         }
-        if (Number(withdrawal) > Number(balance)) {
+        if (Number(withdrawal) > Number(currentUser.balance)) {
             alert('Your balance is too low. Please enter a lower withdrawal amount.'); 
             return;
         }
 
         else {
-        let newBalance = parseInt(balance) - parseInt(withdrawal)
+        let newBalance = parseInt(currentUser.balance) - parseInt(withdrawal)
         setBalance(newBalance);
         const updateUrl = `/account/updateBalance/${currentUser.email}/${newBalance}/withdrawal/${withdrawal}`;
         (async () => {
