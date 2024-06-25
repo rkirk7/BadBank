@@ -2,7 +2,7 @@ import React from "react";
 import { CurrentUser } from "./context";
 import { useNavigate } from "react-router-dom";
 
-export default function CheckAuthentication() {
+export function CheckAuthentication() {
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
 
     const navigate = useNavigate();
@@ -58,5 +58,5 @@ export default function CheckAuthentication() {
           })); 
      }
 
-    return;
+    return null;
  }
