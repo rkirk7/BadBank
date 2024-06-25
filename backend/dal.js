@@ -229,21 +229,22 @@ async function checkAuthorization() {
     try {
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                return (null);
+                resolve (null);
             } else {
                 console.log(`authorization user: ${JSON.stringify(user.email)}`);
                 let theEmail = JSON.stringify(user.email);
                 try {
                     const docs = await db.collection('users').find({ "email": theEmail }).toArray();
                     console.log(JSON.stringify(docs[0]));
-                    return (docs[0]);
+                    resolve (docs[0]);
                 } catch {
-                    return (null);
+                    resolve (null);
                 }
             }
         });
+        return () => unsubscribe();
     } catch {
-        return (null);
+        resolve (null);
     }
 }
 
