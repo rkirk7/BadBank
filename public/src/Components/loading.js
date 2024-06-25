@@ -1,6 +1,4 @@
-import React from "react";
-import { CurrentUser } from "./context";
-import { useNavigate } from "react-router-dom";
+
 
 export async function checkAuthentication(setCurrentUser, navigate) {
     const authorizationURL = `/authorization/`;

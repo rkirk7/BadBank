@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
 import {checkAuthentication, getBalance} from "./loading"
