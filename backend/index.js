@@ -57,8 +57,9 @@ app.get('/account/balance/:email', async function(req,res) {
 app.get('/account/authorization/', async function(req,res) {
     try {
         const user = await dal.checkAuthorization();
-        if (user === null) {
-            res.send("error");
+        console.log('index user,', JSON.stringify(user));
+        if (!user) {
+            res.status(500).send({error: 'No user found.'});
         } else {
         res.send(user);
         }
