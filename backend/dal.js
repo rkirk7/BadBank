@@ -92,6 +92,7 @@ const firebaseConfig = {
     try {
         const auth = getAuth();
        await setPersistence(auth, inMemoryPersistence);
+       console.log(`auth current user: ${auth.currentUser}`);
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
@@ -230,6 +231,7 @@ async function getActivity(email, role) {
 async function checkAuthorization() {
     const auth = getAuth();
 const user = auth.currentUser;
+console.log(`check auth: ${auth}, ${auth.currentUser}`);
 
 if (user) {
     const docs = await db.collection('users').find({ "email": user.email }).toArray();
