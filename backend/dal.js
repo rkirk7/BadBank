@@ -36,13 +36,13 @@ const firebaseConfig = {
   };
   
   const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth();
 
   async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
         throw new Error('Database connection not established');
     }
     try {
-        const auth = getAuth(firebaseApp);
         if (await checkAccount(email)) {
             console.log('Account already exists.');
             return true;
@@ -90,7 +90,6 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
-        const auth = getAuth(firebaseApp);
        await setPersistence(auth, inMemoryPersistence);
        console.log(`auth current user: ${auth.currentUser.email}`);
         await signInWithEmailAndPassword(auth, email, password);
@@ -201,7 +200,6 @@ async function updateBalance(email, newamount, status, amount) {
 
 async function logout() {
     try {
-        const auth = getAuth(firebaseApp);
         await signOut(auth);
         return;
     } catch (error) {
@@ -229,14 +227,13 @@ async function getActivity(email, role) {
 }
 
 async function checkAuthorization() {
-    const auth = getAuth(firebaseApp);
 const user = auth.currentUser;
-console.log(`check auth: ${JSON.stringify(user)}, ${user.email}`);
-
 if (user) {
+    console.log(`check auth: ${JSON.stringify(user)}, ${user.email}`);
     const docs = await db.collection('users').find({ "email": user.email }).toArray();
     return(docs[0]);
 } else {
+    console.log(`no authenticated user found`);
   return(null);
 }
 }
