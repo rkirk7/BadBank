@@ -1,7 +1,7 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence } = require("firebase/auth");
 
 let db = null;
 
@@ -36,13 +36,13 @@ const firebaseConfig = {
   };
   
   const firebaseApp = initializeApp(firebaseConfig);
-  const auth = getAuth();
 
   async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
         throw new Error('Database connection not established');
     }
     try {
+        const auth = getAuth();
         if (await checkAccount(email)) {
             console.log('Account already exists.');
             return true;
@@ -90,9 +90,10 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
+        const auth = getAuth();
        await setPersistence(auth, browserSessionPersistence)
         await signInWithEmailAndPassword(auth, email, password);
-                return await login(email);
+        return await login(email);
 
     } catch (error) {
         console.error('Error logging in with Firebase:', error.code, error.message);
@@ -199,7 +200,8 @@ async function updateBalance(email, newamount, status, amount) {
 
 async function logout() {
     try {
-        await auth.signOut();
+        const auth = getAuth();
+        await signOut(auth);
         return;
     } catch (error) {
         console.error('Error during logout:', error);
@@ -227,10 +229,12 @@ async function getActivity(email, role) {
 
 async function checkAuthorization() {
     return new Promise((resolve, reject) => {
+        const auth = getAuth();
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 resolve(null);
             } else {
+                console.log(JSON.stringify(user));
                 try {
                     const docs = await db.collection('users').find({ "email": user.email }).toArray();
                     resolve(docs[0]);
