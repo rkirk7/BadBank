@@ -13,20 +13,40 @@ export default function Deposit(){
 
     const navigate = useNavigate();
 
-    const authorizationURL = `/account/authorization/`;
+    const authorizationURL = `/authorization/`;
+
     async function reviewAuthorization() {
        var res = await fetch(authorizationURL);
        if (res.ok) {
        let user = await res.json();
        if (!user.email) {
+        setCurrentUser({
+            name: '',
+            email: '',
+            balance: 0,
+            password: '',
+            role: 'none'
+           });
            setTimeout(() => {
             navigate('/');
         }, 0);
+      } else {
+        setCurrentUser(user);
       }
-      }; 
+      } else {
+        setCurrentUser({
+          name: '',
+          email: '',
+          balance: 0,
+          password: '',
+          role: 'none'
+         });
+         setTimeout(() => {
+            navigate('/');
+        }, 0);
+      }
     }
-
-    React.useEffect(() => {
+      React.useEffect(() => {
         if (currentUser.email === '') {
         reviewAuthorization();
         } else {

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
+import {Loading} from "./loading"
 import '../App.css';
 
 export default function Home(){
@@ -8,64 +9,18 @@ export default function Home(){
   const [isUserSet, setIsUserSet] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  async function getBalance(email) {
-    const url = `/account/balance/${email}`;
-    var res = await fetch(url);
-    var data = await res.json();
-  setCurrentUser(user => ({
-    ...user,
-    balance: data.balance
-  }));
-  setLoading(false);     
-}
+  React.useEffect(() => {
+    if (currentUser.email === '') {
+    Loading();
+    setTimeout(() => {
+     setLoading(false);
+  }, 0);
 
-  const authorizationURL = `/authorization/`;
-
-    async function reviewAuthorization() {
-       var res = await fetch(authorizationURL);
-       if (res.ok) {
-       let user = await res.json();
-       if (!user.email) {
-        setCurrentUser({
-            name: '',
-            email: '',
-            balance: 0,
-            password: '',
-            role: 'none'
-           });
-           setIsUserSet(false);
-           setLoading(false);
-      } else {
-        setCurrentUser(user);
-        setIsUserSet(true);
-        setLoading(false);
-      }
-      } else {
-        setCurrentUser({
-          name: '',
-          email: '',
-          balance: 0,
-          password: '',
-          role: 'none'
-         });
-         setIsUserSet(false);
-         setLoading(false);
-      }
+    } else {
+      setLoading(false);
     }
-      React.useEffect(() => {
-        if (currentUser.email === '') {
-        reviewAuthorization();
-        } else {
-          setIsUserSet(true);
-        }
-      }, []);
-
-      React.useEffect(() => {
-        if (isUserSet && currentUser.email) {
-        getBalance(currentUser.email);
-        }
-      }, [isUserSet]);
-
+  }, []);
+ 
     return (
       <>
          {!loading && (

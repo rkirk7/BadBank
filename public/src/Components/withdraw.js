@@ -12,26 +12,44 @@ export default function Withdraw(){
 
     const navigate = useNavigate();
 
-    const authorizationURL = `/account/authorization/`;
     async function reviewAuthorization() {
-       var res = await fetch(authorizationURL);
-       if (res.ok) {
-       let user = await res.json();
-       if (!user.email) {
-           setTimeout(() => {
-            navigate('/');
-        }, 0);
-      }
-      }; 
-    }
-
-    React.useEffect(() => {
-        if (currentUser.email === '') {
-        reviewAuthorization();
-        }  else {
-            getBalance();
-        }
-      }, []);
+        var res = await fetch(authorizationURL);
+        if (res.ok) {
+        let user = await res.json();
+        if (!user.email) {
+         setCurrentUser({
+             name: '',
+             email: '',
+             balance: 0,
+             password: '',
+             role: 'none'
+            });
+            setTimeout(() => {
+             navigate('/');
+         }, 0);
+       } else {
+         setCurrentUser(user);
+       }
+       } else {
+         setCurrentUser({
+           name: '',
+           email: '',
+           balance: 0,
+           password: '',
+           role: 'none'
+          });
+          setTimeout(() => {
+             navigate('/');
+         }, 0);
+       }
+     }
+       React.useEffect(() => {
+         if (currentUser.email === '') {
+         reviewAuthorization();
+         } else {
+             getBalance();
+         }
+       }, []);
 
       async function getBalance() {
         const url = `/account/balance/${currentUser.email}`;
