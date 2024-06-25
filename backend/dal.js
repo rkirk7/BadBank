@@ -25,17 +25,20 @@ const client = new MongoClient(uri, {
   }
   runMongo();
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
-    authDomain: "http://ec2-35-153-141-208.compute-1.amazonaws.com/",
-    projectId: "bank-f0c47",
-    storageBucket: "bank-f0c47.appspot.com",
-    messagingSenderId: "710670974978",
-    appId: "1:710670974978:web:b724e76530555264b8271b"
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdqVgQ0G4Hp6yQ2rL3g7OUxHhxL70_vGU",
+    authDomain: "badbank-58c2f.firebaseapp.com",
+    projectId: "badbank-58c2f",
+    storageBucket: "badbank-58c2f.appspot.com",
+    messagingSenderId: "997038340026",
+    appId: "1:997038340026:web:e1262ea9eb614ad2780f83"
   };
   
-  const firebaseApp = initializeApp(firebaseConfig);
-  const auth = getAuth();
+  
+  // Initialize Firebase
+  
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
 
   async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
