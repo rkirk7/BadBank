@@ -37,7 +37,7 @@ const client = new MongoClient(uri, {
   
   // Initialize Firebase
   
-  const app = initializeApp(firebaseConfig);
+  const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth(firebaseApp);
 
   async function createFirebase(name, email, password, requestedRole) {
