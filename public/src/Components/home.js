@@ -2,12 +2,38 @@ import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
 import '../App.css';
+const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/auth");
 
 export default function Home(){
-  const auth = getAuth();
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
+    authDomain: "bank-f0c47.firebaseapp.com",
+    projectId: "bank-f0c47",
+    storageBucket: "bank-f0c47.appspot.com",
+    messagingSenderId: "710670974978",
+    appId: "1:710670974978:web:b724e76530555264b8271b"
+  };
+  
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
   console.log(JSON.stringify(auth));
   console.log(auth.email);
+  if (!auth.email) {
+    setCurrentUser({
+        name: '',
+        email: '',
+        balance: 0,
+        password: '',
+        role: 'none'
+       });
+       setIsUserSet(false);
+  } else {
+    console.log(`current user should be: ${auth.name}`)
+    setIsUserSet(true);
+  }
+
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
   const [isUserSet, setIsUserSet] = useState(false);
 

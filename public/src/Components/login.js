@@ -19,9 +19,7 @@ export default function Login(){
         }
         return true;
     }
-    
-    const url = `/account/login/`;
-    const logOutUrl = `/account/logout/`;
+        const logOutUrl = `/account/logout/`;
     
     async function logIn(e){
         e.preventDefault();
@@ -36,6 +34,7 @@ export default function Login(){
              return;
          }
 
+         const url = `/account/login/`;
         try {
             var res = await fetch(url, {
                 method: 'POST',
