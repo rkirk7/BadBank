@@ -42,7 +42,7 @@ const firebaseConfig = {
         throw new Error('Database connection not established');
     }
     try {
-        const auth = getAuth();
+        const auth = getAuth(firebaseApp);
         if (await checkAccount(email)) {
             console.log('Account already exists.');
             return true;
@@ -90,7 +90,7 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
-        const auth = getAuth();
+        const auth = getAuth(firebaseApp);
        await setPersistence(auth, inMemoryPersistence);
        console.log(`auth current user: ${auth.currentUser}`);
         await signInWithEmailAndPassword(auth, email, password);
@@ -201,7 +201,7 @@ async function updateBalance(email, newamount, status, amount) {
 
 async function logout() {
     try {
-        const auth = getAuth();
+        const auth = getAuth(firebaseApp);
         await signOut(auth);
         return;
     } catch (error) {
@@ -229,7 +229,7 @@ async function getActivity(email, role) {
 }
 
 async function checkAuthorization() {
-    const auth = getAuth();
+    const auth = getAuth(firebaseApp);
 const user = auth.currentUser;
 console.log(`check auth: ${auth}, ${auth.currentUser}`);
 
