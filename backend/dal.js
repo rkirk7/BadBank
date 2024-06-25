@@ -27,7 +27,7 @@ const client = new MongoClient(uri, {
 
 const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
-    authDomain: "bank-f0c47.firebaseapp.com",
+    authDomain: "http://ec2-35-153-141-208.compute-1.amazonaws.com/",
     projectId: "bank-f0c47",
     storageBucket: "bank-f0c47.appspot.com",
     messagingSenderId: "710670974978",
@@ -226,16 +226,6 @@ async function getActivity(email, role) {
 async function checkAuthorization() {
     return new Promise((resolve, reject) => {
         try {
-            const user = auth.currentUser;
-
-if (user !== null) {
-  user.providerData.forEach((profile) => {
-    console.log("Sign-in provider: " + profile.providerId);
-    console.log("  Provider-specific UID: " + profile.uid);
-    console.log("  Name: " + profile.displayName);
-    console.log("  Email: " + profile.email);
-  });
-}
             const unsubscribe = onAuthStateChanged(auth, async (user) => {
                 if (!user) {
                     resolve(null);
