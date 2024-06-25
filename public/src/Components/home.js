@@ -47,33 +47,33 @@ export default function Home(){
   }));     
 }
 
-  const authorizationURL = `/account/authorization/`;
-    async function reviewAuthorization() {
-       var res = await fetch(authorizationURL);
-       if (res.ok) {
-       let user = await res.json();
-       if (!user.email) {
-        setCurrentUser({
-            name: '',
-            email: '',
-            balance: 0,
-            password: '',
-            role: 'none'
-           });
-           setIsUserSet(false);
-      } else {
-        setCurrentUser(user);
-        setIsUserSet(true);
-      }
-      }; 
-    }
-      React.useEffect(() => {
-        if (currentUser.email === '') {
-        reviewAuthorization();
-        } else {
-          setIsUserSet(true);
-        }
-      }, []);
+  // const authorizationURL = `/account/authorization/`;
+  //   async function reviewAuthorization() {
+  //      var res = await fetch(authorizationURL);
+  //      if (res.ok) {
+  //      let user = await res.json();
+  //      if (!user.email) {
+  //       setCurrentUser({
+  //           name: '',
+  //           email: '',
+  //           balance: 0,
+  //           password: '',
+  //           role: 'none'
+  //          });
+  //          setIsUserSet(false);
+  //     } else {
+  //       setCurrentUser(user);
+  //       setIsUserSet(true);
+  //     }
+  //     }; 
+    // }
+    //   React.useEffect(() => {
+    //     if (currentUser.email === '') {
+    //     reviewAuthorization();
+    //     } else {
+    //       setIsUserSet(true);
+    //     }
+    //   }, []);
 
       React.useEffect(() => {
         if (isUserSet && currentUser.email) {
