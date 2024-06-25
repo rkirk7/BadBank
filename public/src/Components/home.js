@@ -21,10 +21,17 @@ export default function Home() {
   const [isUserSet, setIsUserSet] = useState(false);
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        console.log('No user found');
+    const auth = getAuth(firebaseApp);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log(`User authenticated: ${user.email}`);
+        setCurrentUser((prevUser) => ({
+          ...prevUser,
+          email: user.email,
+        }));
+        setIsUserSet(true);
+      } else {
+        console.log("No user authenticated");
         setCurrentUser({
           name: "",
           email: "",
@@ -33,13 +40,6 @@ export default function Home() {
           role: "none",
         });
         setIsUserSet(false);
-      } else {
-        console.log(`User: ${user.email}`);
-        setCurrentUser((prevUser) => ({
-          ...prevUser,
-          email: user.email,
-        }));
-        setIsUserSet(true);
       }
     });
 
