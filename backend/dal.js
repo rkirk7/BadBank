@@ -37,6 +37,8 @@ const firebaseConfig = {
   
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
+  await setPersistence(auth, inMemoryPersistence);
+
 
   async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
@@ -46,7 +48,6 @@ const firebaseConfig = {
         if (await checkAccount(email)) {
             return true;
         } else {
-            await setPersistence(auth, browserSessionPersistence);
                 await createUserWithEmailAndPassword(auth, email, password);
                 return await create(name, email, requestedRole);          
         }
@@ -89,7 +90,6 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password) {
     try {
-       await setPersistence(auth, browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
