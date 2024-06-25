@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Card, CurrentUser } from "./context";
 import { Link } from "react-router-dom";
-import {CheckAuthentication} from "./loading"
+import {checkAuthentication, getBalance} from "./loading"
 import '../App.css';
 
 export default function Home(){
@@ -9,17 +9,19 @@ export default function Home(){
   const [isUserSet, setIsUserSet] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    if (currentUser.email === '') {
-    CheckAuthentication();
-    setTimeout(() => {
-     setLoading(false);
-  }, 0);
-
-    } else {
-      setLoading(false);
+  useEffect(() => {
+    async function loadPage() {
+        if (currentUser.email === '') {
+            await checkAuthentication(setCurrentUser, navigate);
+        } 
+        else {
+            await getBalance(setCurrentUser, currentUser.email);
+        }
+        setLoading(false);
     }
-  }, []);
+
+    loadPage();
+}, []);
  
     return (
       <>
