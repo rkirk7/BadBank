@@ -1,6 +1,6 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
-const { initializeApp } = require("firebase/app");
+const { initializeServerApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence, inMemoryPersistence } = require("firebase/auth");
 
 let db = null;
@@ -35,7 +35,7 @@ const client = new MongoClient(uri, {
   };
   
   
-  const firebaseApp = initializeApp(firebaseConfig);
+  const firebaseApp = initializeServerApp(firebaseConfig);
   const auth = getAuth(firebaseApp);
 
   async function createFirebase(name, email, password, requestedRole) {
