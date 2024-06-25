@@ -228,7 +228,8 @@ async function getActivity(email, role) {
 }
 
 async function checkAuthorization() {
-    return new Promise((resolve, reject) => {
+
+    try {
         const auth = getAuth();
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
@@ -238,12 +239,14 @@ async function checkAuthorization() {
                 try {
                     const docs = await db.collection('users').find({ "email": user.email }).toArray();
                     resolve(docs[0]);
-                } catch (error) {
-                    reject(error);
+                } catch {
+                    resolve(null);
                 }
             }
-        }, reject);
-    });
+        });
+    } catch {
+        resolve(null);
+    }
 }
 
   module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}
