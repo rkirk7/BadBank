@@ -37,7 +37,7 @@ const firebaseConfig = {
   
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
-  await setPersistence(auth, inMemoryPersistence);
+  setPersistence(auth, inMemoryPersistence);
 
 
   async function createFirebase(name, email, password, requestedRole) {
