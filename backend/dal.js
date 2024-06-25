@@ -226,26 +226,34 @@ async function getActivity(email, role) {
 }
 
 async function checkAuthorization() {
-    try {
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                resolve (null);
-            } else {
-                console.log(`authorization user: ${JSON.stringify(user.email)}`);
-                let theEmail = JSON.stringify(user.email);
-                try {
-                    const docs = await db.collection('users').find({ "email": theEmail }).toArray();
-                    console.log(JSON.stringify(docs[0]));
-                    resolve (docs[0]);
-                } catch {
-                    resolve (null);
+    return new Promise((resolve, reject) => {
+        try {
+            const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                if (!user) {
+                    resolve(null);
+                } else {
+                    console.log(`Authorization user: ${user.email}`);
+                    const email = user.email;
+                    try {
+                        const docs = await db.collection('users').find({ "email": email }).toArray();
+                        if (docs.length > 0) {
+                            resolve(docs[0]);
+                        } else {
+                            resolve(null);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user from database:', error);
+                        reject(error);
+                    }
                 }
-            }
-        });
-        return () => unsubscribe();
-    } catch {
-        resolve (null);
-    }
+            });
+
+            return () => unsubscribe();
+        } catch (error) {
+            console.error('Error during authentication state change:', error);
+            reject(error);
+        }
+    });
 }
 
   module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}
