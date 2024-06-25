@@ -17,7 +17,7 @@ export default function Home(){
   }));     
 }
 
-  const authorizationURL = `/account/authorization/`;
+  const authorizationURL = `/authorization/`;
 
     async function reviewAuthorization() {
        var res = await fetch(authorizationURL);
@@ -66,10 +66,10 @@ export default function Home(){
        bgcolor="primary"
        txtcolor="white"
        header="Regan's Bad Bank"
-       title={currentUser.name != '' ? `Welcome, ${currentUser.name}.` : ''}       
+       title={currentUser.name != '' && `Welcome, ${currentUser.name}.`}       
        body={currentUser.name != '' ? (
       <>
-       Your current balance is ${currentUser.balance}. You can <Link to="/deposit" className="mylink">make a deposit</Link> or <Link to="/withdraw" className="mylink">withdraw fake cash</Link>!
+       Your current balance is ${currentUser.balance}. You can make a <Link to="/deposit" className="mylink">deposit</Link> or <Link to="/withdraw" className="mylink">withdraw</Link> fake cash!
        </>
        ) : (
        <>

@@ -54,14 +54,14 @@ app.get('/account/balance/:email', async function(req,res) {
     }
 });
 
-app.get('/account/authorization/', async function(req,res) {
+app.get('/authorization/', async function(req,res) {
     try {
         const user = await dal.checkAuthorization();
         if (!user) {
-            console.log(`index user info: NONE`);
+            console.log(`index: No user found.`);
             res.status(500).send({error: 'No user found.'});
         } else {
-            console.log(`index user info: ${JSON.stringify(user)}`);
+            console.log(`index user found: ${JSON.stringify(user)}`);
         res.send(user);
         }
     } catch (err) {
