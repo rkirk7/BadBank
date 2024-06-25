@@ -61,7 +61,7 @@ app.get('/account/authorization/', async function(req,res) {
             console.log(`index user info: NONE`);
             res.status(500).send({error: 'No user found.'});
         } else {
-            console.log(`index user info: ${JSON.stringify(user)}`);
+            console.log(`index user info: ${user}`);
         res.send(user);
         }
     } catch (err) {

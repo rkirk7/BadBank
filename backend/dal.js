@@ -235,6 +235,7 @@ async function checkAuthorization() {
                 let theEmail = JSON.stringify(user.email);
                 try {
                     const docs = await db.collection('users').find({ "email": theEmail }).toArray();
+                    console.log(JSON.stringify(docs[0]));
                     return (docs[0]);
                 } catch {
                     return (null);
