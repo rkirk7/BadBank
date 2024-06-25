@@ -14,6 +14,8 @@ export default function AllData(){
   const [showActivity, setShowActivity] = React.useState(true);
   const [userSearch, setUserSearch] = React.useState('');
   const [activitySearch, setActivitySearch] = React.useState('');
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
 
 
   const authorizationURL = `/account/authorization/`;
@@ -25,6 +27,8 @@ export default function AllData(){
          setTimeout(() => {
           navigate('/');
       }, 0);
+    } else {
+      setLoggedIn(true);
     }
     }; 
   }
@@ -45,7 +49,7 @@ export default function AllData(){
       setData(data);
       setLoading(false);
     });
-  }, [reviewAuthorization]);
+  }, [loggedIn]);
 
   let userSearchQuery = data.filter((user) => {
     return user.email && user.email.toLowerCase().includes(userSearch.toLowerCase());
@@ -68,7 +72,7 @@ React.useEffect(() => {
     setActivityData(newData);
     setLoading(false);
   });
-}, [reviewAuthorization]);
+}, [loggedIn]);
 
 let activitySearchQuery = activityData.filter((account) => {
   return account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase());
