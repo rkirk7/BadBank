@@ -17,15 +17,16 @@ const client = new MongoClient(uri, {
     try {
       await client.connect();
       await client.db("myproject").command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
       db = client.db("myproject");
-      if (db) console.log('Mongo database found');
+      if (db) console.log('database found');
     } catch(error) {
         console.log('error:', error);
     }
   }
   runMongo();
 
-  const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
     authDomain: "bank-f0c47.firebaseapp.com",
     projectId: "bank-f0c47",
@@ -34,9 +35,8 @@ const client = new MongoClient(uri, {
     appId: "1:710670974978:web:b724e76530555264b8271b"
   };
   
-  
   const firebaseApp = initializeApp(firebaseConfig);
-  const auth = getAuth(firebaseApp);
+  const auth = getAuth();
 
   async function createFirebase(name, email, password, requestedRole) {
     if (!db) {
@@ -46,7 +46,7 @@ const client = new MongoClient(uri, {
         if (await checkAccount(email)) {
             return true;
         } else {
-           // await setPersistence(auth, inMemoryPersistence);
+            await setPersistence(auth, browserSessionPersistence);
                 await createUserWithEmailAndPassword(auth, email, password);
                 return await create(name, email, requestedRole);          
         }
@@ -89,7 +89,7 @@ const client = new MongoClient(uri, {
 
   async function loginFirebase(email, password) {
     try {
-      // await setPersistence(auth, browserLocalPersistence);
+       await setPersistence(auth, browserSessionPersistence);
         await signInWithEmailAndPassword(auth, email, password);
         return await login(email);
 
@@ -225,34 +225,27 @@ async function getActivity(email, role) {
 }
 
 async function checkAuthorization() {
-    return new Promise((resolve, reject) => {
-        try {
-            const unsubscribe = onAuthStateChanged(auth, async (user) => {
-                if (!user) {
-                    resolve(null);
-                } else {
-                    console.log(`Authorization user: ${user.email}`);
-                    const email = user.email;
-                    try {
-                        const docs = await db.collection('users').find({ "email": email }).toArray();
-                        if (docs.length > 0) {
-                            resolve(docs[0]);
-                        } else {
-                            resolve(null);
-                        }
-                    } catch (error) {
-                        console.error('Error fetching user from database:', error);
-                        reject(error);
-                    }
+    try {
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                console.log(`auth state changed found no user`);
+                resolve (null);
+            } else {
+                console.log(`authorization user: ${JSON.stringify(user.email)}`);
+                let theEmail = JSON.stringify(user.email);
+                try {
+                    const docs = await db.collection('users').find({ "email": theEmail }).toArray();
+                    console.log(JSON.stringify(docs[0]));
+                    resolve (docs[0]);
+                } catch {
+                    resolve (null);
                 }
-            });
-
-            return () => unsubscribe();
-        } catch (error) {
-            console.error('Error during authentication state change:', error);
-            reject(error);
-        }
-    });
+            }
+        });
+    } catch {
+        console.log(`auth state changed had an error`);
+        resolve (null);
+    }
 }
 
   module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}
