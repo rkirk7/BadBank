@@ -1,6 +1,6 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
-const { initializeApp } = require('firebase-admin/app');
+const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence, inMemoryPersistence } = require("firebase/auth");
 
 let db = null;
@@ -47,23 +47,8 @@ const client = new MongoClient(uri, {
             return true;
         } else {
            // await setPersistence(auth, inMemoryPersistence);
-                // await createUserWithEmailAndPassword(auth, email, password);
-                getAuth()
-  .createUser({
-    email: 'user@example.com',
-    emailVerified: false,
-    password: password,
-    displayName: name,
-    disabled: false,
-  })
-  .then((userRecord) => {
-    // See the UserRecord reference doc for the contents of userRecord.
-    console.log('Successfully created new user:', userRecord.uid);
-    return (async ( )=> await create(name, email, requestedRole));    
-  })
-  .catch((error) => {
-    console.log('Error creating new user:', error);
-  });       
+                await createUserWithEmailAndPassword(auth, email, password);
+                return await create(name, email, requestedRole);          
         }
       } catch (error) {
         console.error('Error creating user with Firebase:', error.code, error.message);
@@ -240,50 +225,34 @@ async function getActivity(email, role) {
 }
 
 async function checkAuthorization() {
-    getAuth()
-    .verifyIdToken(idToken)
-    .then((decodedToken) => {
-      const email = decodedToken.email;
-      const docs = (async () => await db.collection('users').find({ "email": email }).toArray());
-            if (docs.length > 0) {
-                resolve(docs[0]);
-            } else {
-                resolve(null);
-            }
-    })
-    .catch((error) => {
-      resolve(error);
-    });
-  
-      
-    // return new Promise((resolve, reject) => {
-    //     try {
-    //         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-    //             if (!user) {
-    //                 resolve(null);
-    //             } else {
-    //                 console.log(`Authorization user: ${user.email}`);
-    //                 const email = user.email;
-    //                 try {
-    //                     const docs = await db.collection('users').find({ "email": email }).toArray();
-    //                     if (docs.length > 0) {
-    //                         resolve(docs[0]);
-    //                     } else {
-    //                         resolve(null);
-    //                     }
-    //                 } catch (error) {
-    //                     console.error('Error fetching user from database:', error);
-    //                     reject(error);
-    //                 }
-    //             }
-    //         });
+    return new Promise((resolve, reject) => {
+        try {
+            const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                if (!user) {
+                    resolve(null);
+                } else {
+                    console.log(`Authorization user: ${user.email}`);
+                    const email = user.email;
+                    try {
+                        const docs = await db.collection('users').find({ "email": email }).toArray();
+                        if (docs.length > 0) {
+                            resolve(docs[0]);
+                        } else {
+                            resolve(null);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching user from database:', error);
+                        reject(error);
+                    }
+                }
+            });
 
-    //         return () => unsubscribe();
-    //     } catch (error) {
-    //         console.error('Error during authentication state change:', error);
-    //         reject(error);
-    //     }
-    // });
+            return () => unsubscribe();
+        } catch (error) {
+            console.error('Error during authentication state change:', error);
+            reject(error);
+        }
+    });
 }
 
   module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}
