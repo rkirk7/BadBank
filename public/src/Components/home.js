@@ -38,6 +38,7 @@ export default function Home(){
       } else {
         setCurrentUser(user);
         setIsUserSet(true);
+        setLoading(false);
       }
       } else {
         setCurrentUser({
@@ -48,6 +49,7 @@ export default function Home(){
           role: 'none'
          });
          setIsUserSet(false);
+         setLoading(false);
       }
     }
       React.useEffect(() => {
