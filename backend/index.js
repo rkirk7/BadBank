@@ -4,7 +4,7 @@ const cors = require('cors');
 var dal = require('./dal.js');
 
 const app = express();
-const port = 4000;
+const port = 3000;
 
 app.use(express.static('build'));
 app.use(cors());
