@@ -11,7 +11,6 @@ export default function AllData(){
   const [showAllUsers, setShowAllUsers] = React.useState(true);
   const [showActivity, setShowActivity] = React.useState(true);
   const [userSearch, setUserSearch] = React.useState('');
-  const [activitySearch, setActivitySearch] = React.useState('');
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [userList, setUserList] = React.useState([]);
   const [activityList, setActivityList] = React.useState([]);
@@ -59,7 +58,7 @@ export default function AllData(){
       let activityData = await res.json();
     
     let activitySearchQuery = activityData.filter((account) =>
-      account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase())
+      account.email && account.email.toLowerCase().includes(userSearch.toLowerCase())
     ) || [];
     
     activityList = activitySearchQuery.slice().reverse().map(account => (
@@ -78,7 +77,7 @@ export default function AllData(){
     }
 
     loadPage();
-}, [currentUser.email, currentUser.role, setCurrentUser, userSearch, activitySearch]);
+}, [currentUser.email, currentUser.role, setCurrentUser, userSearch]);
 
 
 return (
@@ -87,11 +86,11 @@ return (
   <div>
       {currentUser.role === "admin" && (
         <div>
+         <input type="text" placeholder="Search by Email" value={userSearch} onChange={e => {
+          setUserSearch(e.currentTarget.value);
+          }}></input>
          <h1 className="tableheader"><a  className="myLink" onClick={ () => setShowAllUsers(!showAllUsers) }>Admin: All Users</a></h1>
         { showAllUsers && ( <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-         <input type="text" placeholder="Search by Email" value={userSearch} onChange={e => {
-                setUserSearch(e.currentTarget.value);
-                }}></input>
                 </div>
                 )}
       
@@ -112,19 +111,10 @@ return (
      {currentUser.role === "admin" ? (
       <div>
      <h1 className="tableheader"><a className="myLink" onClick= { () => setShowActivity(!showActivity)}>Admin: All Bank Activity</a></h1>
-     {showActivity && (
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-        <input type="text" placeholder="Search by Email" value={activitySearch} onChange={e => {setActivitySearch(e.currentTarget.value);
-        }}>
-        </input>
-        </div>
-              )}
      </div>
-     
      ) : (
       <h1 className="tableheader">My Activity</h1>
      ) }
-
       {showActivity && (
 
 <Table

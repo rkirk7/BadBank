@@ -39,9 +39,7 @@ export default function Login(){
                 alert('There was an error logging in. Please try again.');
             } else {
                 alert('Success! You are now logged in.');
-                               setTimeout(() => {
-                                 navigate('/');
-                             }, 0);
+                navigate('/');
             }
         }
     

@@ -84,7 +84,7 @@ const firebaseConfig = {
             balance: '',
             role: ''
        })); 
-        console.error('Error logging in with Firebase:', error.code, error.message);
+        console.log('Error logging in with Firebase:', error.code, error.message);
         return false;
     }
 }
