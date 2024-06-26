@@ -59,7 +59,7 @@ export default function CreateAccount(){
                     requestedRole = 'requestedAdmin';
                     alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
                 }
-                let res = await createFirebase(name, email, password, persistence, requestedRole, setCurrentUser);
+                let res = await createFirebase(name, email.toLowerCase, password, persistence, requestedRole, setCurrentUser);
                 if (res === 'Error') {
                     alert('Error: There was an error creating your account. Please try again.');
                     return;

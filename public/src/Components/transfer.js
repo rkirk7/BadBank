@@ -117,7 +117,7 @@ export default function Transfer(){
                 }} /> <br /> 
             Transfer To<br/>
             <input type="input" className="form-control" id="recipient" placeholder="Enter Email" value={toEmail} onChange={e => {
-                setToEmail(e.currentTarget.value);
+                setToEmail(e.currentTarget.value.toLowerCase);
                 setTransferComplete(false);
                 }} /> <br />     
                  <button type="submit" className="btn btn-light" onClick={makeTransfer} disabled={!formFilled}>Make Transfer</button> <br />
