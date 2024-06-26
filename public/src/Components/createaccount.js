@@ -43,7 +43,7 @@ export default function CreateAccount(){
         
         let result = /^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/.test(name);
         if (!result) {
-            alert('Please enter a valid, full name.')
+            alert('Please enter a valid first and last name.')
             return;
         }
         if(!validate(password, 'password')) {
