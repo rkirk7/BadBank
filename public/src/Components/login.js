@@ -10,7 +10,7 @@ export default function Login(){
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [formFilled, setFormFilled] = React.useState(true);
-
+    const [persistence, setPersistence] = React.useState(false);
 
     function validate(field, label){
         if (!field) {
@@ -34,7 +34,7 @@ export default function Login(){
                          alert('Your password is incorrect.')
                          return;
                      }
-            let res = await loginFirebase(email, password, setCurrentUser);
+            let res = await loginFirebase(email, password, persistence, setCurrentUser);
             if (res === false) {
                 alert('There was an error logging in. Please try again.');
             } else {
@@ -78,6 +78,10 @@ export default function Login(){
             <input type="input" className="form-control" id="email" placeholder="Enter Email Address" value={email} onChange={e => setEmail(e.currentTarget.value)} /> <br />
             Password<br/>
             <input type="password" className="form-control" id="password" placeholder="Enter Password" value={password} onChange={e => setPassword(e.currentTarget.value)} /> <br />
+            <input type="checkbox" className="form-check-input" id="checkbox" checked={persistence} onChange={e => setPersistence(e.currentTarget.checked)}/>
+        <label htmlFor="checkbox" className="form-check-label">
+          Remember Me
+        </label><br /><br />
             <button type="submit" className="btn btn-light" onClick={logIn} disabled={!formFilled}>Log In</button> <br />
             </form>
         </>

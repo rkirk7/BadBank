@@ -1,5 +1,5 @@
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence, signOut, onAuthStateChanged, browserLocalPersistence } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence, signOut, onAuthStateChanged, browserLocalPersistence, browserSessionPersistence } = require("firebase/auth");
 
 const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
@@ -13,11 +13,14 @@ const firebaseConfig = {
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
 
-  async function createFirebase(name, email, password, requestedRole, setCurrentUser)
+  async function createFirebase(name, email, password, persistence, requestedRole, setCurrentUser)
    {
     try {
+        if (persistence) {
         await setPersistence(auth, browserLocalPersistence);
-
+        } else {
+            await setPersistence(auth, browserSessionPersistence);
+        }
             const checkUrl = `/account/checkaccount/${email}`;
             let res = await fetch(checkUrl);
             let accountExists = await res.json();
@@ -47,9 +50,13 @@ const firebaseConfig = {
             
   }
 
-  async function loginFirebase(email, password, setCurrentUser) {
+  async function loginFirebase(email, password, persistence, setCurrentUser) {
     try {
-        await setPersistence(auth, browserLocalPersistence);
+        if (persistence) {
+            await setPersistence(auth, browserLocalPersistence);
+            } else {
+                await setPersistence(auth, browserSessionPersistence);
+            }
         await signInWithEmailAndPassword(auth, email, password);
             const url = `/account/login/${email}`;
             let res = await fetch(url);

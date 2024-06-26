@@ -2,6 +2,7 @@ import React from "react";
 import { CurrentUser, Card} from "./context";
 import { useNavigate } from "react-router-dom";
 import { createFirebase } from "./firebase";
+import { setPersistence } from "firebase/auth";
 
 export default function CreateAccount(){
 
@@ -13,6 +14,8 @@ export default function CreateAccount(){
     const [role, setRole] = React.useState(false);
     const [formFilled, setFormFilled] = React.useState(true);
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
+    const [persistence, setPersistence] = React.useState(false);
+
 
     function validate(field, label){
         if (!field) {
@@ -57,7 +60,7 @@ export default function CreateAccount(){
                     requestedRole = 'requestedAdmin';
                     alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
                 }
-                let res = await createFirebase(name, email, password, requestedRole, setCurrentUser);
+                let res = await createFirebase(name, email, password, persistence, requestedRole, setCurrentUser);
                 if (res === 'Error') {
                     alert('Error: There was an error creating your account. Please try again.');
                     return;
@@ -98,6 +101,10 @@ export default function CreateAccount(){
             <input type="checkbox" className="form-check-input" id="checkbox" checked={role} onChange={e => setRole(e.currentTarget.checked)}/>
         <label htmlFor="checkbox" className="form-check-label">
           Request administrative access
+        </label><br /><br />
+        <input type="checkbox" className="form-check-input" id="checkbox" checked={persistence} onChange={e => setPersistence(e.currentTarget.checked)}/>
+        <label htmlFor="checkbox" className="form-check-label">
+          Remember Me
         </label><br /><br />
             <button id="submit" type="submit" className="btn btn-light" onClick={handleCreate} disabled={!formFilled}>Create Account</button> <br />
             </form>
