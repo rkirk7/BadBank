@@ -56,8 +56,9 @@ export default function Transfer(){
                 alert('You must enter a valid email address for the recipient. Please try again.'); 
                 return;
             }
+            let toEmailString = toEmail.toLowerCase;
     
-            let receiveUserBalanceURL = `/account/balance/${toEmail}`;
+            let receiveUserBalanceURL = `/account/balance/${toEmailString}`;
             const res2 = await fetch(receiveUserBalanceURL);
     
             if (!res2.ok) {
@@ -73,7 +74,7 @@ export default function Transfer(){
             let newFromBalance = parseInt(currentUser.balance) - parseInt(transferAmount);
             let newToBalance = parseInt(data2.balance) + parseInt(transferAmount);
     
-            const url = `/account/transfer/${currentUser.email}/${toEmail}/${transferAmount}/${newFromBalance}/${newToBalance}`;
+            const url = `/account/transfer/${currentUser.email}/${toEmailString}/${transferAmount}/${newFromBalance}/${newToBalance}`;
             await fetch(url);
     
             setCurrentUser(user => ({
