@@ -85,10 +85,13 @@ return (
       {!loading && (
   <div>
       {currentUser.role === "admin" && (
-        <div>
+        <>
+        <h1 className="tableheader">
          <input type="text" placeholder="Search by Email" value={userSearch} onChange={e => {
           setUserSearch(e.currentTarget.value);
           }}></input>
+          </h1>
+        <div>
          <h1 className="tableheader"><a  className="myLink" onClick={ () => setShowAllUsers(!showAllUsers) }>Admin: All Users</a></h1>
         { showAllUsers && ( <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
                 </div>
@@ -106,7 +109,7 @@ return (
   />
       )}
       </div>
-     )}
+     </>)}
      <div>
      {currentUser.role === "admin" ? (
       <div>

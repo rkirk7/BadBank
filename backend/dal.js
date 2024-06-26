@@ -15,9 +15,8 @@ const client = new MongoClient(uri, {
     try {
       await client.connect();
       await client.db("myproject").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
       db = client.db("myproject");
-      if (db) console.log('database found');
+      if (db) console.log('MongoDB database found');
     } catch(error) {
         console.log('error:', error);
     }
@@ -189,7 +188,7 @@ async function dalCheckAuthorization(email) {
         throw new Error('database connection not successful');
     }
     try {
-        const docs = await db.collection('users').find({ "email": email }).toArray();console.log(JSON.stringify(docs[0]));
+        const docs = await db.collection('users').find({ "email": email }).toArray();
         return(docs[0]);
     } catch (err) {
         console.error(err);
