@@ -1,7 +1,5 @@
 const {MongoClient, ServerApiVersion}= require('mongodb');
 const uri = "mongodb+srv://regankirk:1UARA3FrwCJ2RQ6O@bankcluster.0ttoepa.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true&appName=bankcluster";
-const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence, inMemoryPersistence } = require("firebase/auth");
 
 let db = null;
 
@@ -25,37 +23,6 @@ const client = new MongoClient(uri, {
     }
   }
   runMongo();
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
-    authDomain: "bank-f0c47.firebaseapp.com",
-    projectId: "bank-f0c47",
-    storageBucket: "bank-f0c47.appspot.com",
-    messagingSenderId: "710670974978",
-    appId: "1:710670974978:web:b724e76530555264b8271b"
-  };
-  
-//   const firebaseApp = initializeApp(firebaseConfig);
-//   const auth = getAuth();
-//   setPersistence(auth, inMemoryPersistence);
-
-
-  async function createFirebase(name, email, password, requestedRole) {
-    if (!db) {
-        throw new Error('Database connection not established');
-    }
-    try {
-        if (await checkAccount(email)) {
-            return true;
-        } else {
-                await createUserWithEmailAndPassword(auth, email, password);
-                return await create(name, email, requestedRole);          
-        }
-      } catch (error) {
-        console.error('Error creating user with Firebase:', error.code, error.message);
-        throw error;
-      }
-  }
 
   async function checkAccount(email) {
     if (!db) {
@@ -87,17 +54,6 @@ const firebaseConfig = {
         throw err;
     }
   }
-
-  async function loginFirebase(email, password) {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        return await login(email);
-
-    } catch (error) {
-        console.error('Error logging in with Firebase:', error.code, error.message);
-        return(error);
-    }
-}
 
 async function login(email) {
     if (!db) {
@@ -242,4 +198,4 @@ async function dalCheckAuthorization(email) {
 }
 
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, dalCheckAuthorization, checkAccount}
+  module.exports = {create, all, balance, updateBalance, login, logout, getActivity, transfer, dalCheckAuthorization, checkAccount}
