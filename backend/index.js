@@ -73,7 +73,7 @@ app.get('/authorization/:email', async function(req,res) {
     try {
         const user = await dal.dalCheckAuthorization(req.params.email);
         if (!user) {
-            res.status(500).send({error: 'No user found.'});
+            res.send(false);
         } else {
         res.send(user);
         }

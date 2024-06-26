@@ -105,7 +105,7 @@ async function logout() {
             console.log(`${user.email} is logged in`);
             const url = `/authorization/${user.email}`;
             let res = await fetch(url);
-            if (res.ok) {
+            if (res !== false) {
                 let data = await res.json();
                 setCurrentUser(user => ({
                     email: data.email,
