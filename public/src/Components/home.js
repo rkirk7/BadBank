@@ -1,32 +1,14 @@
 import React, {useState, useEffect} from "react";
 import { Card, CurrentUser } from "./context";
-import { Link, useNavigate } from "react-router-dom";
-import {checkAuthentication, getBalance} from "./loading"
+import { Link } from "react-router-dom";
 import '../App.css';
-import { checkAuthorization } from "./firebase";
+import { checkAuthorization, getBalance } from "./firebase";
 
 
 export default function Home(){
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-  const [isUserSet, setIsUserSet] = useState(false);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-
-//   useEffect(() => {
-//     async function loadPage() {
-//         if (currentUser.email === '') {
-//             await checkAuthentication(setCurrentUser, navigate);
-//         } 
-//         else {
-//             await getBalance(setCurrentUser, currentUser.email);
-//         }
-//         setLoading(false);
-//     }
-
-//     loadPage();
-// }, []);
  
-
   useEffect(() => {
     async function loadPage() {
         if (currentUser.email === '') {

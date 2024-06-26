@@ -1,8 +1,7 @@
 import React, {useEffect} from "react";
 import { Card, CurrentUser } from "./context";
 import { useNavigate } from "react-router-dom";
-import {checkAuthentication, getBalance} from "./loading"
-import { checkAuthorization } from "./firebase";
+import { checkAuthorization, getBalance } from "./firebase";
 
 
 export default function Deposit(){

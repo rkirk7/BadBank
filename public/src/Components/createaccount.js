@@ -6,7 +6,6 @@ import { createFirebase } from "./firebase";
 export default function CreateAccount(){
 
     const navigate = useNavigate();
-    const [show, setShow] = React.useState(true);
     const [status, setStatus] = React.useState('');
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -53,9 +52,6 @@ export default function CreateAccount(){
             alert('Your password must have at least eight characters.')
             return;
         }
-
-             const url = `/account/createaccount/`;
-
             try {
                 if (role) {
                     requestedRole = 'requestedAdmin';
@@ -75,32 +71,6 @@ export default function CreateAccount(){
                 } else {
                     alert('There was an error creating your account. Please try again.');
                 }
-            //     var res = await fetch(url, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({ name, email, password, requestedRole }),
-            //     }
-            //     );
-
-            //     const newUser = await res.json();
-            //     console.log(JSON.stringify(res));
-
-            //     if (newUser === true) {
-            //         alert ("An account already exists for this email. Please log in.")
-            //         return;
-            //     } else {
-
-            // setCurrentUser({
-            //     email: email,
-            //     name: name,
-            //     balance: 0,
-            //     role: requestedRole
-            //   });
-            //   setShow(false);
-            //   alert("Account created! You are now logged in.");
-            //   navigate("/");
     } catch (err) {
         alert('Error: There was an error creating your account. Please try again.');
         throw(err);

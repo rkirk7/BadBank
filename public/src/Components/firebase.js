@@ -119,7 +119,6 @@ async function checkAuthorization(setCurrentUser) {
                 return false;
             }
         } else {
-            console.log('No user logged in');
             setCurrentUser(user => ({
                 email: '',
                 name: '',
@@ -131,4 +130,19 @@ async function checkAuthorization(setCurrentUser) {
     });
 }
 
-  module.exports = {createFirebase, loginFirebase, logout, checkAuthorization}
+export async function getBalance(setCurrentUser, email) {
+    try {
+        const url = `/account/balance/${email}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        setCurrentUser(user => ({
+            ...user,
+            balance: parseInt(data.balance, 10)
+        }));
+    } catch (error) {
+        console.error('Failed to fetch balance:', error);
+    }
+}
+
+
+  module.exports = {createFirebase, loginFirebase, logout, checkAuthorization, getBalance}
