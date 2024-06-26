@@ -12,9 +12,10 @@ const firebaseConfig = {
   
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
-  setPersistence(auth, browserLocalPersistence);
 
-  async function createFirebase(name, email, password, requestedRole, setCurrentUser) {
+  async function createFirebase(name, email, password, requestedRole, setCurrentUser)
+   {
+    await setPersistence(auth, browserLocalPersistence);
     try {
             const checkUrl = `/account/checkaccount/${email}`;
             let res = await fetch(checkUrl);
@@ -47,6 +48,7 @@ const firebaseConfig = {
 
   async function loginFirebase(email, password, setCurrentUser) {
     try {
+        await setPersistence(auth, browserLocalPersistence);
         await signInWithEmailAndPassword(auth, email, password);
             const url = `/account/login/${email}`;
             let res = await fetch(url);

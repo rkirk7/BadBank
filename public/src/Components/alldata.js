@@ -21,23 +21,65 @@ export default function AllData(){
     async function loadPage() {
         if (!currentUser.email) {
           let res = await checkAuthorization(setCurrentUser);
-          if (res) {
-            setLoggedIn(true);
-           let response = getTheData(currentUser, userSearch, activitySearch);
-           setUserList(response.userList);
-           setActivityList(response.activityList);
-          } else {
+          if (!res) {
             navigate('/');
+            return;
           }
-        } else {
-          let response = await getTheData(currentUser, userSearch, activitySearch);
-          setUserList(response.userList);
-          setActivityList(response.activityList);
-        }
+        } 
+
+        const response = await getTheData();
+        setUserList(response.userList);
+        setActivityList(response.activityList);
         setLoading(false);
     }
+
+    async function getTheData() {
+      let userList = [];
+      let activityList = [];
+    
+      if (currentUser.role === 'admin') {
+        let accountRes = await fetch('/account/all');
+        let data = await accountRes.json()
+      let userSearchQuery = data.filter((user) =>
+         user.email && user.email.toLowerCase().includes(userSearch.toLowerCase())
+      ) || [];
+      
+    userList = userSearchQuery.map(user => (
+        <tr key={user._id}>
+          <td>{user.name}</td>
+          <td>${user.balance}</td>
+          <td>{user.email}</td>
+          <td>{user._id}</td>
+        </tr>
+      ));
+    }
+    
+    if (currentUser.role !== '') {
+      let res = await fetch(`/account/getActivity/${currentUser.email}/${currentUser.role}`)
+      let activityData = await res.json();
+    
+    let activitySearchQuery = activityData.filter((account) =>
+      account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase())
+    ) || [];
+    
+    activityList = activitySearchQuery.slice().reverse().map(account => (
+      <tr key={account._id}>
+        <td>{account.email}</td>
+        <td>{account.activity}</td>
+        <td>{new Date(account.date).toLocaleString()}</td>
+      </tr>
+    ));
+    }
+    
+    return {
+      activityList, 
+      userList
+    }
+    }
+
     loadPage();
-}, []);
+}, [currentUser.email, currentUser.role, setCurrentUser, userSearch, activitySearch]);
+
 
 return (
   <>
@@ -99,48 +141,3 @@ return (
   </>
 );
 }
-
-async function getTheData(currentUser, userSearch, activitySearch) {
-  let userList = [];
-  let activityList = [];
-
-  if (currentUser.role === 'admin') {
-    let accountRes = await fetch('/account/all');
-    let data = await accountRes.json()
-  let userSearchQuery = data.filter((user) =>
-     user.email && user.email.toLowerCase().includes(userSearch.toLowerCase())
-  ) || [];
-  
-userList = userSearchQuery.map(user => (
-    <tr key={user._id}>
-      <td>{user.name}</td>
-      <td>${user.balance}</td>
-      <td>{user.email}</td>
-      <td>{user._id}</td>
-    </tr>
-  ));
-}
-
-if (currentUser.role !== '') {
-  let res = await fetch(`/account/getActivity/${currentUser.email}/${currentUser.role}`)
-  let activityData = await res.json();
-
-let activitySearchQuery = activityData.filter((account) =>
-  account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase())
-) || [];
-
-activityList = activitySearchQuery.slice().reverse().map(account => (
-  <tr key={account._id}>
-    <td>{account.email}</td>
-    <td>{account.activity}</td>
-    <td>{new Date(account.date).toLocaleString()}</td>
-  </tr>
-));
-}
-
-return {
-  activityList, 
-  userList
-}
-
-};
