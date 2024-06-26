@@ -1,5 +1,5 @@
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, browserSessionPersistence, setPersistence, signOut, browserLocalPersistence } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, browserSessionPersistence, setPersistence, signOut, browserLocalPersistenc, onAuthStateChanged } = require("firebase/auth");
 
 const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
@@ -15,8 +15,9 @@ const firebaseConfig = {
 
   async function createFirebase(name, email, password, requestedRole, setCurrentUser)
    {
-    await setPersistence(auth, browserLocalPersistence);
     try {
+        await setPersistence(auth, browserLocalPersistence);
+
             const checkUrl = `/account/checkaccount/${email}`;
             let res = await fetch(checkUrl);
             let accountExists = await res.json();
@@ -94,40 +95,40 @@ async function logout() {
 }
 
 async function checkAuthorization(setCurrentUser) {
-    const user = auth.currentUser;
-    if (!user) {
-        console.log(`no user logged in`);
-        setCurrentUser(user => ({
-            email: '',
-            name: '',
-            balance: '',
-            role: ''
-       })); 
-        return false;
-    } else {
-        console.log(`${user} is logged in`);
-        const url = `/authorization/${user.email}`;
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log(`${user.email} is logged in`);
+            const url = `/authorization/${user.email}`;
             let res = await fetch(url);
-            if (res) {
-            var data = await res.json();
-        
-            setCurrentUser(user => ({
-                email: data.email,
-                name: data.name,
-                balance: data.balance,
-                role: data.role
-           })); 
-           return true;
+            if (res.ok) {
+                let data = await res.json();
+                setCurrentUser(user => ({
+                    email: data.email,
+                    name: data.name,
+                    balance: data.balance,
+                    role: data.role
+                }));
+                return true;
+            } else {
+                setCurrentUser(user => ({
+                    email: '',
+                    name: '',
+                    balance: '',
+                    role: ''
+                }));
+                return false;
+            }
         } else {
+            console.log('No user logged in');
             setCurrentUser(user => ({
                 email: '',
                 name: '',
                 balance: '',
                 role: ''
-           })); 
+            }));
             return false;
         }
-    }
+    });
 }
 
   module.exports = {createFirebase, loginFirebase, logout, checkAuthorization}
