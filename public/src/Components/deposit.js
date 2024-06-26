@@ -80,7 +80,7 @@ export default function Deposit(){
             <>
             <form>
             Deposit Amount<br/>
-            <input type="input" className="form-control" id="deposit" placeholder="Enter Deposit Amount" value={deposit} onChange={e => {
+            <input type="input" className="form-control" id="deposit" placeholder="Enter Deposit Amount" value={deposit === 0 ? '' : deposit} onChange={e => {
                 setDeposit(e.currentTarget.value);
                 setDepositComplete(false);
                 }} /> <br /> 

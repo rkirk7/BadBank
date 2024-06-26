@@ -56,13 +56,8 @@ export default function Transfer(){
                 alert('You must enter a valid email address for the recipient. Please try again.'); 
                 return;
             }
-
-            let toEmailString = toEmail;
-            if (toEmail !== '') {
-             toEmailString = toEmail.toLowerCase;
-        }
     
-            let receiveUserBalanceURL = `/account/balance/${toEmailString}`;
+            let receiveUserBalanceURL = `/account/balance/${toEmail.toLowerCase()}`;
             const res2 = await fetch(receiveUserBalanceURL);
     
             if (!res2.ok) {
@@ -78,7 +73,7 @@ export default function Transfer(){
             let newFromBalance = parseInt(currentUser.balance) - parseInt(transferAmount);
             let newToBalance = parseInt(data2.balance) + parseInt(transferAmount);
     
-            const url = `/account/transfer/${currentUser.email}/${toEmailString}/${transferAmount}/${newFromBalance}/${newToBalance}`;
+            const url = `/account/transfer/${currentUser.email}/${toEmail.toLowerCase()}/${transferAmount}/${newFromBalance}/${newToBalance}`;
             await fetch(url);
     
             setCurrentUser(user => ({
@@ -116,13 +111,13 @@ export default function Transfer(){
             <>
             <form>
             Transfer Amount<br/>
-            <input type="input" className="form-control" id="transfer" placeholder="Enter Transfer Amount" value={transferAmount} onChange={e => {
+            <input type="input" className="form-control" id="transfer" placeholder="Enter Transfer Amount" value={transferAmount === 0 ? '' : transferAmount} onChange={e => {
                 setTransferAmount(e.currentTarget.value);
                 setTransferComplete(false);
                 }} /> <br /> 
             Transfer To<br/>
             <input type="input" className="form-control" id="recipient" placeholder="Enter Email" value={toEmail} onChange={e => {
-                setToEmail(e.currentTarget.value.toLowerCase);
+                setToEmail(e.currentTarget.value);
                 setTransferComplete(false);
                 }} /> <br />     
                  <button type="submit" className="btn btn-light" onClick={makeTransfer} disabled={!formFilled}>Make Transfer</button> <br />
