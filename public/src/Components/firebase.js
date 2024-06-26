@@ -1,5 +1,5 @@
 const { initializeApp } = require("firebase/app");
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, browserSessionPersistence, setPersistence, signOut, browserLocalPersistenc, onAuthStateChanged } = require("firebase/auth");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence, signOut, onAuthStateChanged, browserLocalPersistence } = require("firebase/auth");
 
 const firebaseConfig = {
     apiKey: "AIzaSyDhKNCusOPW2y52bMwLnOrXIy-u1y1Q4KI",
