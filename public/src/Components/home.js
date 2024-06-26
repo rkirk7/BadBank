@@ -3,6 +3,8 @@ import { Card, CurrentUser } from "./context";
 import { Link, useNavigate } from "react-router-dom";
 import {checkAuthentication, getBalance} from "./loading"
 import '../App.css';
+import { checkAuthorization } from "./firebase";
+
 
 export default function Home(){
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
@@ -10,20 +12,34 @@ export default function Home(){
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+//   useEffect(() => {
+//     async function loadPage() {
+//         if (currentUser.email === '') {
+//             await checkAuthentication(setCurrentUser, navigate);
+//         } 
+//         else {
+//             await getBalance(setCurrentUser, currentUser.email);
+//         }
+//         setLoading(false);
+//     }
+
+//     loadPage();
+// }, []);
+ 
+
   useEffect(() => {
     async function loadPage() {
         if (currentUser.email === '') {
-            await checkAuthentication(setCurrentUser, navigate);
+          await checkAuthorization(setCurrentUser);
         } 
         else {
             await getBalance(setCurrentUser, currentUser.email);
         }
         setLoading(false);
     }
-
     loadPage();
 }, []);
- 
+
     return (
       <>
          {!loading && (

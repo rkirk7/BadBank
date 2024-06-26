@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import { Card, CurrentUser } from "./context";
-import {checkAuthentication, getBalance} from "./loading"
+import {getBalance} from "./loading"
+import { checkAuthorization } from "./firebase";
 import { useNavigate } from "react-router-dom";
 
 export default function Transfer(){
@@ -16,7 +17,10 @@ export default function Transfer(){
     useEffect(() => {
         async function loadPage() {
             if (currentUser.email === '' || !currentUser) {
-                await checkAuthentication(setCurrentUser, navigate);
+                let res = await checkAuthorization(setCurrentUser);
+                if (!res) {
+                    navigate('/');
+                }
             } 
             else {
                 await getBalance(setCurrentUser, currentUser.email);

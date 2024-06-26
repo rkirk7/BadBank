@@ -1,7 +1,8 @@
 import React, {useEffect} from "react";
 import { Card, CurrentUser } from "./context";
 import { useNavigate } from "react-router-dom";
-import {checkAuthentication, getBalance} from "./loading"
+import {getBalance} from "./loading"
+import { checkAuthorization } from "./firebase";
 
 export default function Withdraw(){
     const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
@@ -17,7 +18,10 @@ export default function Withdraw(){
     useEffect(() => {
         async function loadPage() {
             if (currentUser.email === '' || !currentUser) {
-                await checkAuthentication(setCurrentUser, navigate);
+                let res = await checkAuthorization(setCurrentUser);
+                if (!res) {
+                    navigate('/');
+                }
             } 
             else {
                 await getBalance(setCurrentUser, currentUser.email);
@@ -26,7 +30,6 @@ export default function Withdraw(){
         }
         loadPage();
     }, []);
-
 
     function makeWithdrawal(e) {
         e.preventDefault();

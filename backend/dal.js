@@ -35,9 +35,9 @@ const firebaseConfig = {
     appId: "1:710670974978:web:b724e76530555264b8271b"
   };
   
-  const firebaseApp = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  setPersistence(auth, inMemoryPersistence);
+//   const firebaseApp = initializeApp(firebaseConfig);
+//   const auth = getAuth();
+//   setPersistence(auth, inMemoryPersistence);
 
 
   async function createFirebase(name, email, password, requestedRole) {
@@ -81,7 +81,7 @@ const firebaseConfig = {
     const doc = {name, email, balance: 0, role: requestedRole};
     try {
         const result = await collection.insertOne(doc);
-        return await log(email, `${email } created an account.`, result);
+        return await log(email, `${email} created an account.`, doc);
     } catch (err) {
         console.error('error inserting doc', err);
         throw err;
@@ -105,7 +105,11 @@ async function login(email) {
     }
     try {
         const docs = await db.collection('users').find( {"email" : email}).toArray();
+        if (docs) {
          return docs[0];
+        } else {
+            return null;
+        }
     } catch (err) {
         console.error('error retrieving docs', err);       
     }
@@ -224,30 +228,18 @@ async function getActivity(email, role) {
     }
 }
 
-async function checkAuthorization() {
-    return new Promise((resolve, reject) => {
-        try {
-            onAuthStateChanged(auth, async (user) => {
-                if (!user) {
-                    resolve(null);
-                } else {
-                    console.log(`authorization user: ${user.email}`);
-                    try {
-                        const docs = await db.collection('users').find({ "email": user.email }).toArray();
-                        console.log(JSON.stringify(docs[0]));
-                        resolve(docs[0]);
-                    } catch (err) {
-                        console.error(err);
-                        resolve(null);
-                    }
-                }
-            });
-        } catch (err) {
-            console.log(`auth state changed had an error`, err);
-            resolve(null);
-        }
-    });
+async function checkAuthorization(email) {
+    if (!db) {
+        throw new Error('database connection not successful');
+    }
+    try {
+        const docs = await db.collection('users').find({ "email": email }).toArray();console.log(JSON.stringify(docs[0]));
+        return(docs[0]);
+    } catch (err) {
+        console.error(err);
+        resolve(null);
+    }
 }
 
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization}
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization, checkAccount}

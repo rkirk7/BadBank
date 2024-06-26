@@ -297,7 +297,7 @@ module.exports = function (webpackEnv) {
       fallback: {
             "util": require.resolve("util/"),
             "timers": require.resolve("timers-browserify"),
-
+            "path": false
       },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"

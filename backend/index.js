@@ -10,22 +10,37 @@ app.use(express.static('build'));
 app.use(cors());
 app.use(express.json());
 
-app.post('/account/createaccount/', async (req, res) => {
-    const { name, email, password, requestedRole } = req.body;
+app.get('/account/createaccount/:name/:email/:requestedRole', async (req, res) => {
     try {
-        const user = await dal.createFirebase(name, email, password, requestedRole);
-        res.status(201).send(user);
+        const user = await dal.create(req.params.name, req.params.email, req.params.requestedRole);
+        res.send(user);
     } catch (err) {
         console.error('error creating account', err);
         res.status(500).send({error: 'failed to create account'});
     }
 });
 
-app.post('/account/login/', async function(req,res) {
-    const { email, password } = req.body;
+app.get('/account/login/:email', async function(req,res) {
     try {
-        const user = await dal.loginFirebase(email, password);
-        res.send(user);
+        const user = await dal.login(req.params.email);
+        if (user) res.send(user);
+        else {
+            res.send(null);
+        }
+
+    } catch (err) {
+        console.error('Error logging in:', err);
+        res.status(404).send({ error: 'Failed to find account' });
+    }
+});
+
+app.get('/account/checkaccount/:email', async function(req,res) {
+    try {
+        const accountExists = await dal.checkAccount(req.params.email);
+        if (accountExists) res.send(true);
+        else {
+            res.send(false);
+        }
 
     } catch (err) {
         console.error('Error logging in:', err);
@@ -54,9 +69,10 @@ app.get('/account/balance/:email', async function(req,res) {
     }
 });
 
-app.get('/authorization/', async function(req,res) {
+app.get('/authorization/:email', async function(req,res) {
     try {
-        const user = await dal.checkAuthorization();
+        const user = await dal.checkAuthorization(req.params.email);
+        console.log(`checking for user ${req.params.email}`)
         if (!user) {
             res.status(500).send({error: 'No user found.'});
         } else {

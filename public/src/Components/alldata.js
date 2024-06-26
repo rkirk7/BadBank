@@ -1,84 +1,43 @@
 import React, {useEffect} from "react";
 import {Table, CurrentUser} from "./context";
 import { useNavigate } from "react-router-dom";
-import {checkAuthentication, getBalance} from "./loading"
+import { checkAuthorization } from "./firebase";
 
 export default function AllData(){
   const navigate = useNavigate();
 
   const { currentUser, setCurrentUser } = React.useContext(CurrentUser);
-  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [activityData, setActivityData] = React.useState([]);
   const [showAllUsers, setShowAllUsers] = React.useState(true);
   const [showActivity, setShowActivity] = React.useState(true);
   const [userSearch, setUserSearch] = React.useState('');
   const [activitySearch, setActivitySearch] = React.useState('');
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const [userList, setUserList] = React.useState([]);
+  const [activityList, setActivityList] = React.useState([]);
 
 
   useEffect(() => {
     async function loadPage() {
-      if (currentUser.email === '' || !currentUser) {
-            await checkAuthentication(setCurrentUser, navigate);
+        if (!currentUser.email) {
+          let res = await checkAuthorization(setCurrentUser);
+          if (res) {
             setLoggedIn(true);
-        } 
-        else {
-            await getBalance(setCurrentUser, currentUser.email);
-            setLoggedIn(true);
+           let response = getTheData(currentUser, userSearch, activitySearch);
+           setUserList(response.userList);
+           setActivityList(response.activityList);
+          } else {
+            navigate('/');
+          }
+        } else {
+          let response = await getTheData(currentUser, userSearch, activitySearch);
+          setUserList(response.userList);
+          setActivityList(response.activityList);
         }
+        setLoading(false);
     }
-
     loadPage();
 }, []);
-
-  let userList;
-
-  if (currentUser.role === 'admin') {
-  React.useEffect(() => {
-    fetch('/account/all')
-    .then(response => response.json())
-    .then(data => {
-      setData(data);
-      setLoading(false);
-    });
-  }, [loggedIn]);
-
-  let userSearchQuery = data.filter((user) => {
-    return user.email && user.email.toLowerCase().includes(userSearch.toLowerCase());
-  }) || [];
-  
-userList = userSearchQuery.map(user => (
-    <tr key={user._id}>
-      <td>{user.name}</td>
-      <td>${user.balance}</td>
-      <td>{user.email}</td>
-      <td>{user._id}</td>
-    </tr>
-  ));
-}
-
-React.useEffect(() => {
-  fetch(`/account/getActivity/${currentUser.email}/${currentUser.role}`)
-  .then(response => response.json())
-  .then(newData => {
-    setActivityData(newData);
-    setLoading(false);
-  });
-}, [loggedIn]);
-
-let activitySearchQuery = activityData.filter((account) => {
-  return account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase());
-}) || [];
-
-
-let activityList = activitySearchQuery.slice().reverse().map(account => (
-  <tr key={account._id}>
-    <td>{account.email}</td>
-    <td>{account.activity}</td>
-    <td>{new Date(account.date).toLocaleString()}</td>
-  </tr>
-));
 
 return (
   <>
@@ -140,3 +99,48 @@ return (
   </>
 );
 }
+
+async function getTheData(currentUser, userSearch, activitySearch) {
+  let userList = [];
+  let activityList = [];
+
+  if (currentUser.role === 'admin') {
+    let accountRes = await fetch('/account/all');
+    let data = await accountRes.json()
+  let userSearchQuery = data.filter((user) =>
+     user.email && user.email.toLowerCase().includes(userSearch.toLowerCase())
+  ) || [];
+  
+userList = userSearchQuery.map(user => (
+    <tr key={user._id}>
+      <td>{user.name}</td>
+      <td>${user.balance}</td>
+      <td>{user.email}</td>
+      <td>{user._id}</td>
+    </tr>
+  ));
+}
+
+if (currentUser.role !== '') {
+  let res = await fetch(`/account/getActivity/${currentUser.email}/${currentUser.role}`)
+  let activityData = await res.json();
+
+let activitySearchQuery = activityData.filter((account) =>
+  account.email && account.email.toLowerCase().includes(activitySearch.toLowerCase())
+) || [];
+
+activityList = activitySearchQuery.slice().reverse().map(account => (
+  <tr key={account._id}>
+    <td>{account.email}</td>
+    <td>{account.activity}</td>
+    <td>{new Date(account.date).toLocaleString()}</td>
+  </tr>
+));
+}
+
+return {
+  activityList, 
+  userList
+}
+
+};

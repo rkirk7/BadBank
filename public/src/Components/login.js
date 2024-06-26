@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CurrentUser } from "./context";
+import { loginFirebase, logout } from "./firebase";
 
 export default function Login(){
     const { currentUser, setCurrentUser} = React.useContext(CurrentUser);
@@ -20,55 +21,80 @@ export default function Login(){
         return true;
     }
         const logOutUrl = `/account/logout/`;
+
+        async function logIn(e) {
+            e.preventDefault();
+            if(!validate(email, 'Invalid Email')) return;
+                    if(!validate(password, 'Invalid Password')) return;
+                     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+                        alert("Your email address is not formatted correctly.")
+                        return;
+                     }
+                     if(password.length<8) {
+                         alert('Your password is incorrect.')
+                         return;
+                     }
+            let res = await loginFirebase(email, password, setCurrentUser);
+            if (res === false) {
+                alert('There was an error logging in. Please try again.');
+            } else {
+                alert('Success! You are now logged in.');
+                               setTimeout(() => {
+                                 navigate('/');
+                             }, 0);
+            }
+        }
     
-    async function logIn(e){
-        e.preventDefault();
-        if(!validate(email, 'Invalid Email')) return;
-        if(!validate(password, 'Invalid Password')) return;
-         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-            alert("Your email address is not formatted correctly.")
-            return;
-         }
-         if(password.length<8) {
-             alert('Your password is incorrect.')
-             return;
-         }
+//     async function logIn(e){
+//         e.preventDefault();
+//         if(!validate(email, 'Invalid Email')) return;
+//         if(!validate(password, 'Invalid Password')) return;
+//          if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+//             alert("Your email address is not formatted correctly.")
+//             return;
+//          }
+//          if(password.length<8) {
+//              alert('Your password is incorrect.')
+//              return;
+//          }
+//          await loginFirebase(email, password);
 
-         const url = `/account/login/`;
-        try {
-            var res = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
 
-         var data = await res.json();
-         if (data.code && data.name === 'FirebaseError') {
-            alert("Something went wrong. Please check your credentials and try again.")
-            return;
-         }
-             setCurrentUser({
-                 email: email,
-                 name: data.name,
-                 balance: data.balance,
-                 role: data.role
-               });  
+//          const url = `/account/login/`;
+//         try {
+//             var res = await fetch(url, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify({ email, password }),
+//             });
+
+//          var data = await res.json();
+//          if (data.code && data.name === 'FirebaseError') {
+//             alert("Something went wrong. Please check your credentials and try again.")
+//             return;
+//          }
+//              setCurrentUser({
+//                  email: email,
+//                  name: data.name,
+//                  balance: data.balance,
+//                  role: data.role
+//                });  
  
-               alert('Success! You are now logged in.');
-               setTimeout(() => {
-                 navigate('/');
-             }, 0);
-    } catch (err) {
-        console.error('Error logging in', err);
-        alert('Error: There was an error logging in. Please try again.');
-    }
-}
+//                alert('Success! You are now logged in.');
+//                setTimeout(() => {
+//                  navigate('/');
+//              }, 0);
+//     } catch (err) {
+//         console.error('Error logging in', err);
+//         alert('Error: There was an error logging in. Please try again.');
+//     }
+// }
 
     async function logOut(){
-        var res = await fetch(logOutUrl);
-        if (res) {
+        var res = await logout();
+        if (res === true) {
         setCurrentUser(user => ({
             email: '',
             name: '',

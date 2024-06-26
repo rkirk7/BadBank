@@ -1,6 +1,7 @@
 import React from "react";
 import { CurrentUser, Card} from "./context";
 import { useNavigate } from "react-router-dom";
+import { createFirebase } from "./firebase";
 
 export default function CreateAccount(){
 
@@ -60,34 +61,46 @@ export default function CreateAccount(){
                     requestedRole = 'requestedAdmin';
                     alert('You have requested administrative access to the website. For now, you will have user access until the bank administrator can review your request.')
                 }
-
-                var res = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name, email, password, requestedRole }),
-                }
-                );
-
-                const newUser = await res.json();
-                console.log(JSON.stringify(res));
-
-                if (newUser === true) {
-                    alert ("An account already exists for this email. Please log in.")
+                let res = await createFirebase(name, email, password, requestedRole, setCurrentUser);
+                if (res === 'Error') {
+                    alert('Error: There was an error creating your account. Please try again.');
                     return;
+                } else if (res === 'Account exists') {
+                    alert('An account for this email address already exists. Please log in.');
+                } else if (res === 'Account created') {
+                    alert('Success! Your account has been created and you are now logged in.');
+                                   setTimeout(() => {
+                                     navigate('/');
+                                 }, 0);
                 } else {
+                    alert('There was an error creating your account. Please try again.');
+                }
+            //     var res = await fetch(url, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({ name, email, password, requestedRole }),
+            //     }
+            //     );
 
-            setCurrentUser({
-                email: email,
-                name: name,
-                balance: 0,
-                role: requestedRole
-              });
-              setShow(false);
-              alert("Account created! You are now logged in.");
-              navigate("/");
-            }
+            //     const newUser = await res.json();
+            //     console.log(JSON.stringify(res));
+
+            //     if (newUser === true) {
+            //         alert ("An account already exists for this email. Please log in.")
+            //         return;
+            //     } else {
+
+            // setCurrentUser({
+            //     email: email,
+            //     name: name,
+            //     balance: 0,
+            //     role: requestedRole
+            //   });
+            //   setShow(false);
+            //   alert("Account created! You are now logged in.");
+            //   navigate("/");
     } catch (err) {
         alert('Error: There was an error creating your account. Please try again.');
         throw(err);
