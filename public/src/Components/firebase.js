@@ -13,14 +13,13 @@ const firebaseConfig = {
   const firebaseApp = initializeApp(firebaseConfig);
   const auth = getAuth();
 
-  async function createFirebase(name, email, password, persistence, requestedRole, setCurrentUser)
-   {
+  async function createFirebase(name, email, password, persistence, requestedRole, setCurrentUser) {
     try {
+        let thePersistence = browserSessionPersistence
         if (persistence) {
-        await setPersistence(auth, browserLocalPersistence);
-        } else {
-            await setPersistence(auth, browserSessionPersistence);
-        }
+            thePersistence = browserLocalPersistence;
+        } 
+            await setPersistence(auth, thePersistence);
             const checkUrl = `/account/checkaccount/${email}`;
             let res = await fetch(checkUrl);
             let accountExists = await res.json();
@@ -47,16 +46,15 @@ const firebaseConfig = {
         console.error('Error creating user with Firebase:', error.code, error.message);
         return 'Error';
       }
-            
   }
 
   async function loginFirebase(email, password, persistence, setCurrentUser) {
     try {
+        let thePersistence = browserSessionPersistence
         if (persistence) {
-            await setPersistence(auth, browserLocalPersistence);
-            } else {
-                await setPersistence(auth, browserSessionPersistence);
-            }
+            thePersistence = browserLocalPersistence;
+        } 
+            await setPersistence(auth, thePersistence);
         await signInWithEmailAndPassword(auth, email, password);
             const url = `/account/login/${email}`;
             let res = await fetch(url);
@@ -101,7 +99,7 @@ async function logout() {
     }
 }
 
-async function checkAuthorization(setCurrentUser) {
+ async function checkAuthorization(setCurrentUser) {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             console.log(`${user.email} is logged in`);
@@ -137,7 +135,7 @@ async function checkAuthorization(setCurrentUser) {
     });
 }
 
-export async function getBalance(setCurrentUser, email) {
+ async function getBalance(setCurrentUser, email) {
     try {
         const url = `/account/balance/${email}`;
         const res = await fetch(url);
@@ -150,6 +148,5 @@ export async function getBalance(setCurrentUser, email) {
         console.error('Failed to fetch balance:', error);
     }
 }
-
 
   module.exports = {createFirebase, loginFirebase, logout, checkAuthorization, getBalance}

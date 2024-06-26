@@ -71,8 +71,7 @@ app.get('/account/balance/:email', async function(req,res) {
 
 app.get('/authorization/:email', async function(req,res) {
     try {
-        const user = await dal.checkAuthorization(req.params.email);
-        console.log(`checking for user ${req.params.email}`)
+        const user = await dal.dalCheckAuthorization(req.params.email);
         if (!user) {
             res.status(500).send({error: 'No user found.'});
         } else {

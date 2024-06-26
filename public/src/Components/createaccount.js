@@ -2,7 +2,6 @@ import React from "react";
 import { CurrentUser, Card} from "./context";
 import { useNavigate } from "react-router-dom";
 import { createFirebase } from "./firebase";
-import { setPersistence } from "firebase/auth";
 
 export default function CreateAccount(){
 
@@ -102,7 +101,7 @@ export default function CreateAccount(){
         <label htmlFor="checkbox" className="form-check-label">
           Request administrative access
         </label><br /><br />
-        <input type="checkbox" className="form-check-input" id="checkbox" checked={persistence} onChange={e => setPersistence(e.currentTarget.checked)}/>
+        <input type="checkbox" className="form-check-input" id="persistencecheck" checked={persistence} onChange={e => setPersistence(e.currentTarget.checked)}/>
         <label htmlFor="checkbox" className="form-check-label">
           Remember Me
         </label><br /><br />

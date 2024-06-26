@@ -228,7 +228,7 @@ async function getActivity(email, role) {
     }
 }
 
-async function checkAuthorization(email) {
+async function dalCheckAuthorization(email) {
     if (!db) {
         throw new Error('database connection not successful');
     }
@@ -242,4 +242,4 @@ async function checkAuthorization(email) {
 }
 
 
-  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, checkAuthorization, checkAccount}
+  module.exports = {create, createFirebase, loginFirebase, all, balance, updateBalance, login, logout, getActivity, transfer, dalCheckAuthorization, checkAccount}
