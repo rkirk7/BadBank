@@ -56,7 +56,11 @@ export default function Transfer(){
                 alert('You must enter a valid email address for the recipient. Please try again.'); 
                 return;
             }
-            let toEmailString = toEmail.toLowerCase;
+
+            let toEmailString = toEmail;
+            if (toEmail !== '') {
+             toEmailString = toEmail.toLowerCase;
+        }
     
             let receiveUserBalanceURL = `/account/balance/${toEmailString}`;
             const res2 = await fetch(receiveUserBalanceURL);

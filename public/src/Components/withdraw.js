@@ -84,7 +84,7 @@ export default function Withdraw(){
             <>
             <form>
             Withdrawal Amount<br/>
-            <input type="input" className="form-control" id="withdrawal" placeholder="Enter Withdrawal Amount" value={withdrawal} onChange={e => {
+            <input type="input" className="form-control" id="withdrawal" placeholder="Enter Withdrawal Amount" value={withdrawal === 0 ? '' : withdrawal} onChange={e => {
                 setWithdrawal(e.currentTarget.value);
                 setWithdrawalComplete(false);
                 }} /> <br /> 
